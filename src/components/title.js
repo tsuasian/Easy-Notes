@@ -5,7 +5,7 @@ class Title extends React.Component {
     super(props);
   }
   render() {
-    return (<h1>Dummy Title</h1>);
+    return (<div></div>);
   }
 }
 

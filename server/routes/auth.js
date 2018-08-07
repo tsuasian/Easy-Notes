@@ -13,7 +13,7 @@ export default function(passport){
 
 // router.get('/login', function(req, res) {
 //   console.log("LOGIN GET");
-//   // res.render('login')
+//   // res.render(login')
 // });
 
 router.post('/signup', function(req, res){

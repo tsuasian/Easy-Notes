@@ -16,28 +16,22 @@ export default class App extends React.Component {
     this.loginUser = this.loginUser.bind(this)
   }
 
-  registerUser(username, password){
+  registerUser(username, password, cb){
     axios.post(dbUrl + '/signup', {username: username, password: password})
     .then(function(response) {
-        console.log(response);
-        return true;
+        console.log("(success) response register", response);
+        cb(response);
     })
     .catch(function(error)  {
-      console.log(error);
-      return false;
+      console.log("(error registering)", error);
+      cb(null);
     })
   }
-
-  // onToggleLoggedIn() {
-  //   this.setState({
-  //     loggedIn: !this.state.loggedIn
-  //   })
-  // }
 
   loginUser(username, password) {
     axios.post(dbUrl + '/login', {username:username, password:password})
     .then((response) => {
-      console.log("response", response);
+      console.log("response login", response);
       // this.onToggleLoggedIn();
       // loggedIn: !this.state.loggedIn
 

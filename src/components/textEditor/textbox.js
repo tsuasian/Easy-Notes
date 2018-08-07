@@ -14,9 +14,6 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 //material ui - flat button - menu - menuitem -  popover  draft js custom styles
 
 
-
-
-
 import createStyles from 'draft-js-custom-styles';
 const customStyleMap = {
  MARK: {

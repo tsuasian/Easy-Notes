@@ -9,10 +9,8 @@ import Popper from '@material-ui/core/Popper';
 import Popover from '@material-ui/core/Popover';
 import Paper from '@material-ui/core/Paper';
 import Grow from '@material-ui/core/Grow';
+import Grid from '@material-ui/core/Grid';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-
-//material ui - flat button - menu - menuitem -  popover  draft js custom styles
-
 
 import createStyles from 'draft-js-custom-styles';
 const customStyleMap = {
@@ -21,32 +19,41 @@ const customStyleMap = {
    fontStyle: 'italic',
  },
 };
-const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform'], 'PREFIX_', customStyleMap);
-const fontSizes = [ '12px','18px','24px','30px','40px','60px' ];
 
+const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform'], 'PREFIX_', customStyleMap);
+const fontSizes = [ 12,18,22,30,40,60 ];
+const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
 
 class Textbox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       editorState: EditorState.createEmpty(),
-      open: false,
+      fontSizeMenuOpen: false,
+      colorMenuOpen: false,
+      anchorEl: null,
 
     };
     this.onChange = (editorState) => this.setState({editorState});
-    this.toggleColor = (toggledColor) => this._toggleColor(toggledColor);
+    this.customStyleFn = (editorState) => this.setState({editorState})
   };
 
-  _handleMenuToggle = () => {
-    this.setState({ open: !this.state.open });
+  _handleFontSizeMenuToggle = () => {
+    this.setState({ fontSizeMenuOpen: !this.state.fontSizeMenuOpen });
   };
 
-  _handleMenuClose = event => {
+  _handleFontSizeMenuClose = event => {
       if (this.anchorEl.contains(event.target)) {
         return;
       }
+      this.setState({ fontSizeMenuOpen: false });
+    };
 
-      this.setState({ open: false });
+  _handleColorMenuClose = event => {
+      if (this.anchorEl.contains(event.target)) {
+        return;
+      }
+      this.setState({ colorMenuOpen: false });
     };
 
   _onBoldClick(e) {
@@ -56,29 +63,28 @@ class Textbox extends React.Component {
 
   _onItalicClick(e) {
     e.preventDefault()
-    console.log(this.state.editorState);
-
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'));
   }
 
-  _onHighLightClick(e){
-  }
-
   _onFontSizeClick(e){
-    this._handleMenuClose(e);
-    var newFontSize = e.target.value;
-    this.onChange(styles.fontSize.toggle(this.state.editorState, newFontSize)); //probably change this more...og was:  fontSize => {const newEditorState = styles.fontSize.toggle(this.state.editorState, fontSize); return this.updateEditorState(newEditorState);
+    this._handleFontSizeMenuClose(e);
+    var newFontSize = String(e.target.value).concat('px');
+    this.customStyleFn(styles.fontSize.toggle(this.state.editorState, newFontSize));
   }
 
-  _testFontSize(e){
-    // e.preventDefault();
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'red'));
+  _onColorClick(e){
+    e.preventDefault();
+    var newColor = e.target.getAttribute('value');
+    this.setState({ anchorEl: null });
+    this.customStyleFn(styles.color.toggle(this.state.editorState, newColor));
   }
+
+  _handleColorMenuOpen = event => {
+      this.setState({ anchorEl: event.currentTarget });
+  };
 
   render() {
-    const fonts = x => x.map((fontSize, index) => {
-      return <MenuItem key={index} value={fontSize} onClick={(e)=>this._onFontSizeClick(e)}>{fontSize}</MenuItem>;
-    });
+    const { anchorEl } = this.state;
     return (
       <div>
         <div>
@@ -88,23 +94,47 @@ class Textbox extends React.Component {
           <Button onClick={(e) => this._onItalicClick(e)}>
             Italic
           </Button>
-          <Button onClick={(e) => this._onHighLightClick(e)}>
-            Highlight
+
+          {/* Color menu */}
+          <Button
+            aria-owns={anchorEl ? 'menu-list-grow' : null}
+            aria-haspopup="true"
+            onClick={this._handleColorMenuOpen}
+          >
+            Colors
           </Button>
-          <Button onClick={(e) => this._testFontSize(e)}>
-            TestFontSizeChange
-          </Button>
+          <Menu
+            id="menu-list-grow"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={this._handleColorMenuClose}
+          >
+            <Grid>
+              {colors.map( (color, index) =>
+                <Grid key={index} value={color} item>
+                  <MenuItem
+                    value={color}
+                    style={{color:String(color), backgroundColor: '#eaecef', borderTop: '1px solid #bdbebf'}}
+                    onClick={(e) => this._onColorClick(e)}>{color}
+                  </MenuItem>
+              </Grid> )}
+            </Grid>
+          </Menu>
+
+          {/* Font size menu */}
           <Button
             buttonRef={node => {
               this.anchorEl = node;
             }}
-            aria-owns={this.state.open ? "menu-list-grow" : null}
+            aria-owns={this.state.fontSizeMenuOpen ? "menu-list-grow" : null}
             aria-haspopup="true"
-            onClick={this._handleMenuToggle}
+            onClick={this._handleFontSizeMenuToggle}
           >
           Font Size
           </Button>
-          <Popper open={this.state.open} anchorEl={this.anchorEl} transition disablePortal>
+          <Popper open={this.state.fontSizeMenuOpen}
+            anchorEl={this.anchorEl}
+            transition disablePortal>
             {({ TransitionProps, placement }) => (
               <Grow
                 {...TransitionProps}
@@ -115,9 +145,16 @@ class Textbox extends React.Component {
                 }}
                 >
                 <Paper>
-                  <ClickAwayListener onClickAway={this._handleMenuClose}>
-                    <MenuList>
-                      {fontSizes.map((fontSize, index)=><MenuItem key={index} value={fontSize} onClick={(e)=>this._onFontSizeClick(e)}>{fontSize}</MenuItem>)}
+                  <ClickAwayListener onClickAway={this._handleFontSizeMenuClose}>
+                    <MenuList>  {/* probably change this to table*/}
+                      {fontSizes.map((fontSize, index) =>
+                        <MenuItem className='fontSizeMenuItem'
+                          key={index}
+                          value={fontSize}
+                          onClick={(e)=>this._onFontSizeClick(e)}>
+                            {fontSize}
+                          </MenuItem>
+                        )}
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>
@@ -125,8 +162,12 @@ class Textbox extends React.Component {
             )}
           </Popper>
         </div>
+
+        {/* Text input box */}
         <div className="editor">
           <Editor
+            customStyleFn={customStyleFn}
+            customStyleMap={customStyleMap}
             editorState={this.state.editorState}
             onChange={this.onChange}
           />

@@ -22,7 +22,7 @@ const customStyleMap = {
  },
 };
 const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform'], 'PREFIX_', customStyleMap);
-const fontSizes = [ 12,18,24,30,40,60 ];
+const fontSizes = [ '12px','18px','24px','30px','40px','60px' ];
 
 
 class Textbox extends React.Component {
@@ -34,6 +34,7 @@ class Textbox extends React.Component {
 
     };
     this.onChange = (editorState) => this.setState({editorState});
+    this.toggleColor = (toggledColor) => this._toggleColor(toggledColor);
   };
 
   _handleMenuToggle = () => {
@@ -55,18 +56,23 @@ class Textbox extends React.Component {
 
   _onItalicClick(e) {
     e.preventDefault()
+    console.log(this.state.editorState);
+
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'));
   }
 
   _onHighLightClick(e){
-    this.onChange(styles.toggle(this.state.editorState, 'MARK'));
   }
 
   _onFontSizeClick(e){
     this._handleMenuClose(e);
     var newFontSize = e.target.value;
-    console.log(this);
     this.onChange(styles.fontSize.toggle(this.state.editorState, newFontSize)); //probably change this more...og was:  fontSize => {const newEditorState = styles.fontSize.toggle(this.state.editorState, fontSize); return this.updateEditorState(newEditorState);
+  }
+
+  _testFontSize(e){
+    // e.preventDefault();
+    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'red'));
   }
 
   render() {
@@ -84,6 +90,9 @@ class Textbox extends React.Component {
           </Button>
           <Button onClick={(e) => this._onHighLightClick(e)}>
             Highlight
+          </Button>
+          <Button onClick={(e) => this._testFontSize(e)}>
+            TestFontSizeChange
           </Button>
           <Button
             buttonRef={node => {

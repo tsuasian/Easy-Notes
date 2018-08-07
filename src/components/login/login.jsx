@@ -26,13 +26,6 @@ export default class Login extends Component {
 
   render() {
     if(this.state.mode) {
-      // return (<div>
-      //   <h2>Login</h2>
-      //   <label htmlFor="username">Username</label><input id="username" onChange={this.onChange('username')} value={this.state.username}/><br/>
-      //   <label htmlFor="password">Password</label><input id="password" onChange={this.onChange('password')} value={this.state.password}/><br/>
-      //   <button onClick={this.onLogin}>Login</button>
-      //   <button onClick={this.onToggleMode}>Register</button>
-      // </div>)      THIS.ONTOGGLEMODE
       return (
       <div className="box-container">
       <div className="inner-container">
@@ -51,7 +44,6 @@ export default class Login extends Component {
               className="login-input"
               placeholder="Username"/>
           </div>
-
           <div className="input-group">
             <label htmlFor="password">Password</label>
             <input
@@ -81,15 +73,6 @@ export default class Login extends Component {
       </div>
     );
     } else {
-      // return (<div>
-      //   <h2>Register</h2>
-      //   <label htmlFor="name">Name</label><input id="name" onChange={this.onChange('name')} value={this.state.name}/><br/>
-      //   <label htmlFor="username">Username</label><input id="username" onChange={this.onChange('username')} value={this.state.username}/><br/>
-      //   <label htmlFor="password">Password</label><input id="password" onChange={this.onChange('password')} value={this.state.password}/><br/>
-      //   <label htmlFor="password2">Retype Password</label><input id="password2" onChange={this.onChange('password2')} value={this.state.password2}/><br/>
-      //   <button onClick={this.onRegister}>Register</button>
-      //   <button onClick={this.onToggleMode}>Cancel</button>
-      // </div>)
       return (
       <div className="box-container">
       <div className="inner-container">

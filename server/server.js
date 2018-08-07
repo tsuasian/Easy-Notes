@@ -5,15 +5,30 @@ const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const assert = require('assert');
-app.use(express.static(path.join(__dirname, 'build')));
-app.use(bodyParser.json())
 
+import cookieParser from 'cookie-parser';
+import session from 'express-session'
+import passport from 'passport';
+import LocalStrategy from 'passport-local';
+// import logger from 'morgan'
+import MongoStoreLib from 'connect-mongo';
+var MongoStore = MongoStoreLib(session);
+import User from './models/user'
 
 //sockets
-const app               = express();
-const server            = require('http').Server(app);
-const io                = require('socket.io')(server);
+const app = express();
+const server= require('http').Server(app);
+const io = require('socket.io')(server);
 
+app.use(express.static(path.join(__dirname, 'build')));
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+//TODO: look over for repeats..
+console.log("mongo uri", process.env.MONGODB_URI);
 
 //  ********************* ****  //
 // ***  MONGODB CONNECTION ***  //
@@ -24,6 +39,13 @@ if (! fs.existsSync('./env.sh')) {
 if (! process.env.MONGODB_URI) {
   throw new Error("MONGODB_URI is not in the environmental variables. Try running 'source env.sh'");
 }
+//
+import authRouter from './routes/auth.js'
+// const dbRoutes = require('./routes/auth.js');
+app.use('/', authRouter(passport));
+
+mongoose.connect(process.env.MONGODB_URI);
+
 mongoose.connection.on('connected', function() {
   console.log('Success: connected to MongoDb!');
 });
@@ -31,25 +53,90 @@ mongoose.connection.on('error', function() {
   console.log('Error connecting to MongoDb. Check MONGODB_URI in env.sh');
   process.exit(1);
 });
-mongoose.connect(process.env.MONGODB_URI);
 
-//create server, listen on port 1337
-http.createServer((req, res) => {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
-}).listen(1337, '127.0.0.1');
-
-console.log('Server running at http://127.0.0.1:1337/');
+// //create server, listen on port 1337
+// http.createServer((req, res) => {
+//   res.writeHead(200, {'Content-Type': 'text/plain'});
+//   res.end('Hello World\n');
+// }).listen(1337, '127.0.0.1');
+//
+// console.log('Server running at http://127.0.0.1:1337/');
 
 
 //  ***************************  //
 // ***  SOCKET IO ROUTES    ***  //
 //  ***************************  //
-server.listen(8080);
+server.listen(1337, ()=> {
+  console.log('Server for React Todo App listening on port 1337!')
+});
+
 io.on('connection', function(socket)  {
-  console.log('connected');
+  console.log('connected to socket');
   socket.emit('msg', {hello: 'world'});
   socket.on('cmd', function(data) {
     console.log(data);
   });
 });
+
+//  ***************************  //
+// ***  PASSPORT ROUTES     ***  //
+//  ***************************  //
+
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  store: new MongoStore({mongooseConnection: mongoose.connection})
+}))
+
+passport.use(new LocalStrategy(function(username, password, done){
+  console.log('LOCAL STRAT');
+  User.findOne({ username })
+  .then(function(user){
+    if (!user){
+      console.log('1');
+      done(null, false);
+    } else if (user.password !== password){
+      console.log('2');
+      done(null, false);
+    } else {
+      console.log('3');
+      done(null, user);
+    }
+  })
+  .catch(function(error){
+    done(error);
+  })
+}))
+
+passport.serializeUser((user, done) => {
+  console.log('SERIALIZE');
+  done(null, user._id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.User.findById(id, (err, user) => {
+    done(err, user);
+  });
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  // res.render('error');
+});
+
+// module.exports = app;
+export default app;

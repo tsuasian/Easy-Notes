@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGOOSE_URI)
+// mongoose.connect(process.env.MONGOOSE_URI)
 
 const DocumentSchema = new mongoose.Schema({
   owner: {

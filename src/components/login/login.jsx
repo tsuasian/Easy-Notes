@@ -3,25 +3,35 @@ import React, { Component } from 'react'
 export default class Login extends Component {
   state = {mode: true}
 
-  onChange = (field) => (e) => this.setState({[field]: e.target.value})
-  onToggleMode = () => this.setState({mode: !this.state.mode})
+  onChange = (field) => (e) => this.setState({
+    [field]: e.target.value
+  })
+  onToggleMode = () => this.setState({
+    mode: !this.state.mode
+  })
 
   onLogin = () => {
     const {username, password} = this.state
     const {socket, navigate} = this.props
-    socket.emit('login', {username, password}, (res) => {
-      navigate(DocumentList)
-    })
+
+    // socket.emit('login', {username, password}, (res) => {
+    //   navigate(DocumentList)
+    // })
+
   }
   onRegister = () => {
     const {username, password, password2, name} = this.state
-    const {socket, navigate} = this.props
+    const {socket, navigate} = this.props;
+    console.log("username/pass", this.state.username, this.state.password);
+    if (this.props.registerUser(this.state.username, this.state.password)){
+      //successfully registered:
 
+    }
     // TODO: if(password !== password2) return this.setState({validation:'Passwords not the same'})
 
-    socket.emit('register', {username, password, name}, (res) => {
-      navigate(DocumentList)
-    })
+    // socket.emit('register', {username, password, name}, (res) => {
+    //   navigate(DocumentList)
+    // })
   }
 
   render() {
@@ -107,7 +117,7 @@ export default class Login extends Component {
             <input
               id="password2"
               onChange={this.onChange('password2')}
-              value={this.state.password}
+              value={this.state.password2}
               type="password"
               name="password"
               className="login-input"

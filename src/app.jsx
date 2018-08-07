@@ -11,8 +11,9 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       loggedIn: false,
-
-    }
+    };
+    // this.onToggleLoggedIn = this.onToggleLoggedIn.bind(this);
+    this.loginUser = this.loginUser.bind(this)
   }
 
   registerUser(username, password){
@@ -27,11 +28,27 @@ export default class App extends React.Component {
     })
   }
 
+  // onToggleLoggedIn() {
+  //   this.setState({
+  //     loggedIn: !this.state.loggedIn
+  //   })
+  // }
+
   loginUser(username, password) {
     axios.post(dbUrl + '/login', {username:username, password:password})
-    .then( function (response) {
-      console.log(response);
-      this.setState({loggedIn: true});
+    .then((response) => {
+      console.log("response", response);
+      // this.onToggleLoggedIn();
+      // loggedIn: !this.state.loggedIn
+
+      this.setState(prevState => ({
+      loggedIn: !prevState.loggedIn
+    }));
+
+      console.log("logged in?", this.state.loggedIn);
+    })
+    .catch(err => {
+      console.log(err);
     })
   }
 
@@ -54,7 +71,7 @@ export default class App extends React.Component {
   render() {
     return (<div className="root-container">
       {this.state.loggedIn?  <Document/> :
-          <Login registerUser={this.registerUser}/> }
+          <Login registerUser={this.registerUser} loginUser={this.loginUser}/> }
     </div>);
   }
 }

@@ -7,14 +7,14 @@ import session from 'express-session'
 
 export default function(passport){
 /* GET home page. */
-router.get('/signup', function(req, res){
-  // res.render('signup');
-});
+// router.get('/signup', function(req, res){
+//   // res.render('signup');
+// });
 
-router.get('/login', function(req, res) {
-  console.log("LOGIN GET");
-  // res.render('login')
-});
+// router.get('/login', function(req, res) {
+//   console.log("LOGIN GET");
+//   // res.render('login')
+// });
 
 router.post('/signup', function(req, res){
   new User({
@@ -31,10 +31,13 @@ router.post('/signup', function(req, res){
   })
 });
 
-router.post('/login', passport.authenticate('local', {
-  // successRedirect: '/',
-  // failureRedirect: '/login'
-}));
+//user null if not logged in
+router.post('/login', (req, res, next) => passport.authenticate('local', (err, user, info) => {
+  //respond with json file
+  res.json({user, err})
+})(req, res, next));
+
+
 
 router.get('/logout', function(req, res){
   // req.logout;

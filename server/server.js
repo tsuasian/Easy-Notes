@@ -90,7 +90,7 @@ app.use(session({
 }))
 
 passport.use(new LocalStrategy(function(username, password, done){
-  console.log('LOCAL STRAT');
+  console.log('LOCAL STRAT', username, password);
   User.findOne({ username })
   .then(function(user){
     if (!user){

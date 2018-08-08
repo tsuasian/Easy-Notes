@@ -97,12 +97,32 @@ io.on('connection', function(socket)  {
         collaborator: [],
         name
       });
-
       newDocument.save();
+      console.log("new doc", newDocument);
       user.documents.push(newDocument);
       user.save();
+      console.log("new user with pushed document", user.documents);
       socket.emit('documentCreated', newDocument)
     });
+  })
+
+  //LOAD DOC
+  socket.on('loadDoc', (user) => {
+    console.log("load doc user", user);
+    let arr = [] //array of document objects
+    for (var document in user.documents){
+      console.log("current document in for loop", document)
+      Document.findById(user.documents[document])
+        .then(doc => {
+          console.log("found doc", doc)
+          arr.push(doc)
+          console.log("arr of document objects", arr);
+          socket.emit('docsLoaded', arr)
+      })
+    }
+
+
+
   })
 });
 
@@ -110,7 +130,7 @@ io.on('connection', function(socket)  {
 
 //  ***************************  //
 // ***  PASSPORT ROUTES     ***  //
-//  ***************************  //
+//  ***************************    //
 
 app.use(session({
   secret: 'keyboard cat',
@@ -133,7 +153,6 @@ passport.use(new LocalStrategy(function(username, password, done){
       console.log('2');
       done(null, false);
     } else {
-      console.log('user from passport', user);
       done(null, user);
     }
   })
@@ -143,13 +162,11 @@ passport.use(new LocalStrategy(function(username, password, done){
 }))
 
 passport.serializeUser((user, done) => {
-  console.log('SERIALIZE');
   done(null, user._id);
 });
 
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
-    console.log("user from deserialize", user);
     done(err, user);
   });
 });

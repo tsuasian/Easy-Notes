@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios'
+
 class DocPortal extends React.Component {
   constructor(props){
     super(props);
@@ -7,6 +8,7 @@ class DocPortal extends React.Component {
     this.state = {
       user: undefined,
       socket: this.props.socket,
+      //array of document objects
       documents: [],
       newDocumentName: "",
     }
@@ -15,6 +17,7 @@ class DocPortal extends React.Component {
   }
   componentDidMount() {
     //    SETUP USERS
+
     var self = this;
     axios.get('http://localhost:1337/getUser')
     .then(user => {
@@ -26,9 +29,13 @@ class DocPortal extends React.Component {
       console.log("error", e);
     })
 
-    //create document
+    //    FETCH OWNER'S DOCUMENTS
+    // for (var docId in )
+
+    //    DOCUMENT CREATED
     this.state.socket.on('documentCreated', (newDocument) => {
       var documents = self.state.documents.slice();
+      //array of document objects
       documents.push(newDocument);
       self.setState({documents})
     })
@@ -43,12 +50,14 @@ class DocPortal extends React.Component {
   createDocument()  {
     console.log("emitting createDoc event");
     var user = this.state.user.user;
-    var docname = this.state.newDocumentName
-    this.state.socket.emit('createDoc', {user, docname})
+    var name = this.state.newDocumentName
+    // console.log("document name", docname);
+    this.state.socket.emit('createDoc', {user, name})
   }
 
   render() {
     console.log(this.state.user);
+    console.log(this.state.documents);
     return (
       <div className="container">
         <div className="header">
@@ -65,16 +74,31 @@ class DocPortal extends React.Component {
             placeholder="New Document Name"/>
         </div>
         <div>
-        <button
-          type="button"
-          className="login-btn"
-          onClick={this.createDocument}
-          >
-          Save Document
-        </button>
+          <button
+            type="button"
+            className="login-btn"
+            onClick={this.createDocument}
+            >
+            Save Document
+          </button>
         </div>
-          <div className="box container">
-          </div>
+
+        <div className="container-documents">
+          {this.state.documents.map( (document) => {
+            <div className="box-container">
+                {document.name}
+                {document._id}
+                <div>
+                  <button
+                    type="button"
+                    className="login-btn">
+                    Edit Document
+                  </button>
+                </div>
+            </div>
+          })}
+        </div>
+
       </div>
     );
   }

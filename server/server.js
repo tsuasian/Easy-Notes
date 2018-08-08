@@ -97,10 +97,11 @@ io.on('connection', function(socket)  {
         collaborator: [],
         name
       });
-
       newDocument.save();
+      console.log("new doc", newDocument);
       user.documents.push(newDocument);
       user.save();
+      console.log("new user with pushed document", user.documents);
       socket.emit('documentCreated', newDocument)
     });
   })
@@ -133,7 +134,6 @@ passport.use(new LocalStrategy(function(username, password, done){
       console.log('2');
       done(null, false);
     } else {
-      console.log('user from passport', user);
       done(null, user);
     }
   })
@@ -143,13 +143,11 @@ passport.use(new LocalStrategy(function(username, password, done){
 }))
 
 passport.serializeUser((user, done) => {
-  console.log('SERIALIZE');
   done(null, user._id);
 });
 
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
-    console.log("user from deserialize", user);
     done(err, user);
   });
 });

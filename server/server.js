@@ -107,17 +107,22 @@ io.on('connection', function(socket)  {
   })
 
   //LOAD DOC
-  socket.on('loadDoc', ({user}) => {
-    console.log(user);
+  socket.on('loadDoc', (user) => {
+    console.log("load doc user", user);
     let arr = [] //array of document objects
-    for (var document in user.user.documents){
-      Document.findById(document).then(doc => {
-        arr.push(doc)
+    for (var document in user.documents){
+      console.log("current document in for loop", document)
+      Document.findById(user.documents[document])
+        .then(doc => {
+          console.log("found doc", doc)
+          arr.push(doc)
+          console.log("arr of document objects", arr);
+          socket.emit('docsLoaded', arr)
       })
     }
 
-    console.log("arr of document objects", arr);
-    socket.emit('docsLoaded', arr)
+
+
   })
 });
 

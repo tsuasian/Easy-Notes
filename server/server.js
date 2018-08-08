@@ -15,6 +15,7 @@ import MongoStoreLib from 'connect-mongo';
 var MongoStore = MongoStoreLib(session);
 import User from './models/user'
 import Document from './models/document'
+import DocumentContent from './models/documentcontent'
 import apiRouter from './routes/api.js'
 
 
@@ -92,12 +93,20 @@ io.on('connection', function(socket)  {
   socket.on('createDoc', ({user, name}) => {
     console.log('got to createDoc socket on server');
     User.findById(user._id).then(user => {
-      var newDocument = new Document({
+        //make new document summary
+        var newDocument = new Document({
         owner: user._id,
         collaborator: [],
         name
       });
+      //make new document contents. editorState is the <Editor/> setState
+      //i.e. the actual contents
+      var newDocumentContents = new DocumentContents({
+        documentId: newDocument._id,
+        editorState:{}
+      })
       newDocument.save();
+      newDocumentContents.save();
       console.log("new doc", newDocument);
       user.documents.push(newDocument);
       user.save();
@@ -107,7 +116,7 @@ io.on('connection', function(socket)  {
   })
 
   //LOAD DOC
-  socket.on('loadDoc', (user) => {
+  socket.on('loadDocuments', (user) => {
     console.log("load doc user", user);
     let arr = [] //array of document objects
     for (var document in user.documents){
@@ -117,13 +126,19 @@ io.on('connection', function(socket)  {
           console.log("found doc", doc)
           arr.push(doc)
           console.log("arr of document objects", arr);
-          socket.emit('docsLoaded', arr)
+          socket.emit('documentsLoaded', arr)
       })
     }
-
-
-
   })
+
+  //LOAD DOCUMENT CONTENTS
+  socket.on('loadDocumentContents', ({documentId}) => {
+    console.log("document id from socket", documentId);
+    //
+  })
+
+
+
 });
 
 

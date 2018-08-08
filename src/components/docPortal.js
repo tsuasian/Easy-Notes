@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios'
+
 class DocPortal extends React.Component {
   constructor(props){
     super(props);
@@ -27,6 +28,9 @@ class DocPortal extends React.Component {
     .catch(e => {
       console.log("error", e);
     })
+
+    //    FETCH OWNER'S DOCUMENTS
+    // for (var docId in )
 
     //    DOCUMENT CREATED
     this.state.socket.on('documentCreated', (newDocument) => {
@@ -70,28 +74,31 @@ class DocPortal extends React.Component {
             placeholder="New Document Name"/>
         </div>
         <div>
-        <button
-          type="button"
-          className="login-btn"
-          onClick={this.createDocument}
-          >
-          Save Document
-        </button>
+          <button
+            type="button"
+            className="login-btn"
+            onClick={this.createDocument}
+            >
+            Save Document
+          </button>
         </div>
-        <div className="container">
+
+        <div className="container-documents">
           {this.state.documents.map( (document) => {
             <div className="box-container">
-                <div>{document.name}</div>
+                {document.name}
+                {document._id}
                 <div>
-                <button
-                  type="button"
-                  className="login-btn">
-                  Edit Document
-                </button>
+                  <button
+                    type="button"
+                    className="login-btn">
+                    Edit Document
+                  </button>
                 </div>
             </div>
           })}
         </div>
+
       </div>
     );
   }

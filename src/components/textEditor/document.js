@@ -12,6 +12,12 @@ import ColorMenu from './ColorMenu';
 import FontMenu from './FontMenu';
 
 const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform'], 'PREFIX_');
+const styleMap = {
+  'STRIKETHROUGH': {
+    textDecoration: 'line-through'
+  }
+}
+
 
 class Document extends React.Component {
   constructor(props){
@@ -23,6 +29,17 @@ class Document extends React.Component {
     }
     this.onChange = (editorState) => this.setState({editorState});
     this.customStyleFn = (editorState) => this.setState({editorState})
+    this.setDomEditorRef = ref => this.domEditor = ref;
+    this.handleKeyCommand = this.handleKeyCommand.bind(this);
+  }
+
+  handleKeyCommand(command, editorState) {
+    const newState = RichUtils.handleKeyCommand(editorState, command);
+    if (newState) {
+      this.onChange(newState);
+      return 'handled';
+    }
+    return 'not-handled';
   }
 
   _onBoldClick(e) {
@@ -33,6 +50,14 @@ class Document extends React.Component {
   _onItalicClick(e) {
     e.preventDefault()
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'));
+  }
+
+  _OnStrikeClick() {
+    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'STRIKETHROUGH'));
+  }
+
+  _OnUnderlineClick() {
+    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'UNDERLINE'));
   }
 
   _hangleColorChange(e){
@@ -66,6 +91,10 @@ class Document extends React.Component {
     });
   }
 
+  _HandleFocus() {
+    this.domEditor.focus()
+  }
+
 
   render(){
     const { colorAnchorEl } = this.state;
@@ -76,35 +105,44 @@ class Document extends React.Component {
 
     return(
       <div>
-        <Button onClick={(e) => this._onBoldClick(e)}>
-          Bold
-        </Button>
-        <Button onClick={(e) => this._onItalicClick(e)}>
-          Italic
-        </Button>
-        <FontMenu
-          _handleMenuClose={(e)=>this._handleMenuClose(e)}
-          _setFontAnchorEl={(e)=>this._setFontAnchorEl(e)}
-          _handleFontChange={(e)=>this._hangleFontChange(e)}
-          fontOpen={fontOpen}
-          fontAnchorEl={fontAnchorEl}
-        >
-        </FontMenu>
-        <ColorMenu
-          _handleMenuClose={(e)=>this._handleMenuClose(e)}
-          _setColorAnchorEl={(e)=>this._setColorAnchorEl(e)}
-          _handleColorChange={(e)=>this._hangleColorChange(e)}
-          colorOpen={colorOpen}
-          colorAnchorEl={colorAnchorEl}
-        >
-        </ColorMenu>
-
-
-        <div className="editor">
+        <div className="toolbar">
+          <Button onClick={(e) => this._onBoldClick(e)}>
+            Bold
+          </Button>
+          <Button onClick={(e) => this._onItalicClick(e)}>
+            Italic
+          </Button>
+          <Button onClick={() => this._OnUnderlineClick()}>
+            Underline
+          </Button>
+          <Button onClick={() => this._OnStrikeClick()}>
+            Strikethrough
+          </Button>
+          <FontMenu
+            _handleMenuClose={(e)=>this._handleMenuClose(e)}
+            _setFontAnchorEl={(e)=>this._setFontAnchorEl(e)}
+            _handleFontChange={(e)=>this._hangleFontChange(e)}
+            fontOpen={fontOpen}
+            fontAnchorEl={fontAnchorEl}
+          >
+          </FontMenu>
+          <ColorMenu
+            _handleMenuClose={(e)=>this._handleMenuClose(e)}
+            _setColorAnchorEl={(e)=>this._setColorAnchorEl(e)}
+            _handleColorChange={(e)=>this._hangleColorChange(e)}
+            colorOpen={colorOpen}
+            colorAnchorEl={colorAnchorEl}
+          >
+          </ColorMenu>
+        </div>
+        <div className="editor" onClick={() => this._HandleFocus()}>
           <Editor
             customStyleFn={customStyleFn}
             editorState={this.state.editorState}
             onChange={this.onChange}
+            ref={this.setDomEditorRef}
+            handleKeyCommand={this.handleKeyCommand}
+            customStyleMap={styleMap}
           />
         </div>
       </div>

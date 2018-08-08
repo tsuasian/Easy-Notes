@@ -8,6 +8,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
+import FormatColorText from '@material-ui/icons/FormatColorText';
 const colors = ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
 
 
@@ -36,9 +37,8 @@ class ColorMenu extends React.Component {
         <Button
           aria-owns={this.props.colorOpen ? 'color-popper' : null}
           aria-haspopup="true"
-          variant="contained"
           onClick={(e) => this._setColorAnchorEl(e)}>
-          Change Color
+          <FormatColorText />
         </Button>
         <Popover
           id="color-popper"  //the

@@ -10,14 +10,39 @@ import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import ColorMenu from './ColorMenu';
 import FontMenu from './FontMenu';
+import FormatUnderlined from '@material-ui/icons/FormatUnderlined';
+import FormatBold from '@material-ui/icons/FormatBold';
+import FormatItalic from '@material-ui/icons/FormatItalic';
+import FormatStrikethrough from '@material-ui/icons/FormatStrikethrough';
+import FormatAlignRight from '@material-ui/icons/FormatAlignRight';
+import FormatAlignCenter from '@material-ui/icons/FormatAlignCenter';
+import FormatAlignLeft from '@material-ui/icons/FormatAlignLeft';
+import SaveAlt from '@material-ui/icons/SaveAlt';
+import CloudUpload from '@material-ui/icons/CloudUpload';
 
-const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform'], 'PREFIX_');
+const { styles, customStyleFn, exporter, convertToRaw } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
 const styleMap = {
   'STRIKETHROUGH': {
     textDecoration: 'line-through'
   }
 }
 
+var blockStyleFn = function(block){
+  const type = block.getType();
+  switch(type){
+    case 'right':
+      return 'alignRightClass';
+      break;
+
+    case 'left':
+      return 'alignLeftClass';
+      break;
+
+    case 'center':
+      return 'alignCenterClass';
+      break;
+  }
+}
 
 class Document extends React.Component {
   constructor(props){
@@ -28,10 +53,10 @@ class Document extends React.Component {
       fontAnchorEl: null,
     }
     this.onChange = (editorState) => this.setState({editorState});
-    this.customStyleFn = (editorState) => this.setState({editorState})
     this.setDomEditorRef = ref => this.domEditor = ref;
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
   }
+
 
   handleKeyCommand(command, editorState) {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -60,10 +85,22 @@ class Document extends React.Component {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'UNDERLINE'));
   }
 
+  _onRightAlignClick() {
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'right'));
+  }
+
+  _onLeftAlignClick() {
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'left'));
+  }
+  _onCenterAlignClick
+  _onCenterAlignClick() {
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'center'));
+  }
+
   _hangleColorChange(e){
     this._setColorAnchorEl(e);
     var newColor = e.target.getAttribute('value');
-    this.customStyleFn(styles.color.toggle(this.state.editorState, newColor));
+    this.onChange(styles.color.toggle(this.state.editorState, newColor));
   }
 
   _setColorAnchorEl(e){
@@ -75,7 +112,7 @@ class Document extends React.Component {
   _hangleFontChange(e){
     this._setFontAnchorEl(e);
     var newFontSize = String(e.target.value).concat('px');
-    this.customStyleFn(styles.fontSize.toggle(this.state.editorState, newFontSize));
+    this.onChange(styles.fontSize.toggle(this.state.editorState, newFontSize));
   }
 
   _setFontAnchorEl(e){
@@ -95,6 +132,13 @@ class Document extends React.Component {
     this.domEditor.focus()
   }
 
+  _onSaveClick(e){
+    alert("Not saved")
+  }
+
+  _onShareClick(e){
+    alert('Not shared')
+  }
 
   render(){
     const { colorAnchorEl } = this.state;
@@ -105,19 +149,36 @@ class Document extends React.Component {
 
     return(
       <div>
+        <div className="docshare-toolbar">
+          <Button className="toolbar-btn" onClick={(e) => this._onSaveClick(e)}>
+            <SaveAlt />
+          </Button><Button className="toolbar-btn" onClick={(e) => this._onShareClick(e)}>
+            <CloudUpload />
+          </Button>
+        </div>
         <div className="toolbar">
-          <Button onClick={(e) => this._onBoldClick(e)}>
-            Bold
+          <Button className="toolbar-btn" onClick={(e) => this._onBoldClick(e)}>
+            <FormatBold />
           </Button>
-          <Button onClick={(e) => this._onItalicClick(e)}>
-            Italic
+          <Button className="toolbar-btn" onClick={(e) => this._onItalicClick(e)}>
+            <FormatItalic />
           </Button>
-          <Button onClick={() => this._OnUnderlineClick()}>
-            Underline
+          <Button className="toolbar-btn" onClick={() => this._OnUnderlineClick()}>
+            <FormatUnderlined />
           </Button>
-          <Button onClick={() => this._OnStrikeClick()}>
-            Strikethrough
+          <Button className="toolbar-btn" onClick={() => this._OnStrikeClick()}>
+            <FormatStrikethrough />
           </Button>
+          <Button className="toolbar-btn" onClick={() => this._onLeftAlignClick()}>
+            <FormatAlignLeft />
+          </Button>
+          <Button className="toolbar-btn" onClick={() => this._onCenterAlignClick()}>
+            <FormatAlignCenter />
+          </Button>
+          <Button className="toolbar-btn" onClick={() => this._onRightAlignClick()}>
+            <FormatAlignRight />
+          </Button>
+
           <FontMenu
             _handleMenuClose={(e)=>this._handleMenuClose(e)}
             _setFontAnchorEl={(e)=>this._setFontAnchorEl(e)}
@@ -137,6 +198,7 @@ class Document extends React.Component {
         </div>
         <div className="editor" onClick={() => this._HandleFocus()}>
           <Editor
+            blockStyleFn={blockStyleFn}
             customStyleFn={customStyleFn}
             editorState={this.state.editorState}
             onChange={this.onChange}

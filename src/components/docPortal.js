@@ -59,7 +59,6 @@ class DocPortal extends React.Component {
   }
 
   render() {
-    console.log("doc state", this.states.documents)
     return (
       <div className="container-docportal">
       <div className="navbar-container">

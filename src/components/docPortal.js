@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios'
+import {AppBar, Tabs, Tab} from 'material-ui'
+import Button from '@material-ui/core/Button';
 
 class DocPortal extends React.Component {
   constructor(props) {
@@ -18,26 +20,22 @@ class DocPortal extends React.Component {
   componentDidMount() {
     //    SETUP USERS
     var self = this;
-    axios.get('http://localhost:1337/getUser')
-      .then(user => {
+    axios.get('http://localhost:1337/getUser').then(user => {
       self.setState({user: user.data})
-    })
-      .then(() => {
+    }).then(() => {
       self.state.socket.on('documentCreated', (newDocument) => {
         var documents = self.state.documents.slice();
         //array of document objects
         documents.push(newDocument);
         self.setState({documents})
       })
-      console.log("state user before emit", self.state.user.user)
-      self.state.socket.emit('loadDoc', self.state.user.user)
-      self.state.socket.on('docsLoaded', (newDocArr) => {
-        console.log("received doc arr", newDocArr)
+      // console.log("state user before emit", self.state.user.user)
+      self.state.socket.emit('loadDocuments', self.state.user.user)
+      self.state.socket.on('documentsLoaded', (newDocArr) => {
+        // console.log("received doc arr", newDocArr)
         self.setState({documents: newDocArr})
       });
-      console.log("documents state set and this is the name", this.state.documents[0].name);
-    })
-      .catch(e => {
+    }).catch(e => {
       console.log("error", e);
     })
 
@@ -61,10 +59,14 @@ class DocPortal extends React.Component {
   }
 
   render() {
-    console.log("documents state in render", this.state.documents);
+    console.log("doc state", this.states.documents)
+    return (
+      <div className="container-docportal">
+      <div className="navbar-container">
+        <AppBar>
 
-    // console.log("documents id in render", this.state.documents._id)
-    return (<div className="container">
+        </AppBar>
+      </div>
       <div className="header">
         {
           this.state.user
@@ -72,6 +74,22 @@ class DocPortal extends React.Component {
             : 'loading'
         }
       </div>
+
+      {/* documents pulled from db */}
+      <div className="container-documents">
+        {
+          this.state.documents.map((document) => {
+            return <Button>{document.name}</Button>
+          })
+        }
+        <div>
+          <button type="button" className="login-btn">
+            Edit Document
+          </button>
+        </div>
+      </div>
+
+      {/* add new document */}
       <div>
         <input id="newDocumentName" onChange={(e) => this.setState({newDocumentName: e.target.value})} type="text" name="newDocumentName" value={this.state.newDocumentName} className="login-input" placeholder="New Document Name"/>
       </div>
@@ -81,18 +99,8 @@ class DocPortal extends React.Component {
         </button>
       </div>
 
-      <div className="container-documents">
-        {this.state.documents.map((document) => {
-            return <p>{document.name}</p>
-          })}
-        <div>
-          <button type="button" className="login-btn">
-            Edit Document
-          </button>
-        </div>
-      </div>
-
-    </div>);
+    </div>
+    );
   }
 }
 

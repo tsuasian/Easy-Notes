@@ -120,10 +120,10 @@ io.on('connection', function(socket)  {
     console.log("load doc user", user);
     let arr = [] //array of document objects
     for (var document in user.documents){
-      console.log("current document in for loop", document)
+      // console.log("current document in for loop", document)
       Document.findById(user.documents[document])
         .then(doc => {
-          console.log("found doc", doc)
+          // console.log("found doc", doc)
           arr.push(doc)
           console.log("arr of document objects", arr);
           socket.emit('documentsLoaded', arr)

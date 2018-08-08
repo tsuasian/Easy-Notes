@@ -11,6 +11,7 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       loggedIn: false,
+      socket:  io('http://localhost:1337')
     };
     // this.onToggleLoggedIn = this.onToggleLoggedIn.bind(this);
     this.loginUser = this.loginUser.bind(this)
@@ -48,23 +49,16 @@ export default class App extends React.Component {
 
 
 
+
   componentDidMount() {
     console.log('COMPONENTDIDMOUNT');
-    var socket = io('http://localhost:1337')
-   //  socket.on('connect', function()  {
-   //    console.log('ws connect')
-   //  });
-   // socket.on('disconnect', function() {
-   //    console.log('ws disconnect')
-   //  });
-   //  socket.on('msg', message => {
-   //    console.log(message);
-   //  })
+
+    this.state.socket.emit('sayHi', {hi: "hi"})
   }
 
   render() {
     return (<div className="root-container">
-      {this.state.loggedIn?  <Document/> :
+      {this.state.loggedIn?  <Document socket={this.state.socket}/> :
           <Login registerUser={this.registerUser} loginUser={this.loginUser}/> }
     </div>);
   }

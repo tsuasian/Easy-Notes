@@ -32,17 +32,32 @@ router.post('/signup', function(req, res){
 });
 
 //user null if not logged in
-router.post('/login', (req, res, next) => passport.authenticate('local', (err, user, info) => {
-  //respond with json file
-  res.json({user, err})
-})(req, res, next));
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+      if (!err && user) {
+        req.login(user, (err) => {
+          if (err) {
+            res.status(500)
+              .json({ success: false, err: err });
+          } else {
+            res.status(200)
+              .json({ success: true });
+          }
+        })
+      } else {
+        console.log('hit else');
+        res.status(500)
+          .json({ success: false });
+      }
+    })(req, res, next);
+  });
 
 
+  router.get('/getUser', (req, res, next) => {
+    res.json({user: req.user})
+  })
 
-router.get('/logout', function(req, res){
-  // req.logout;
-  // res.redirect('login')
-});
+
 
 
 return router;

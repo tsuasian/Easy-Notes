@@ -15,11 +15,16 @@ import MongoStoreLib from 'connect-mongo';
 var MongoStore = MongoStoreLib(session);
 import User from './models/user'
 
+import apiRouter from './routes/api.js'
+
+
+
 //sockets
 const app = express();
 const server= require('http').Server(app);
 const io = require('socket.io')(server);
 
+app.use('/', apiRouter);
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
 app.use(express.json());
@@ -42,13 +47,15 @@ if (! process.env.MONGODB_URI) {
 //
 import authRouter from './routes/auth.js'
 // const dbRoutes = require('./routes/auth.js');
-app.use('/', authRouter(passport));
+
+
 
 mongoose.connect(process.env.MONGODB_URI);
 
 mongoose.connection.on('connected', function() {
   console.log('Success: connected to MongoDb!');
 });
+
 mongoose.connection.on('error', function() {
   console.log('Error connecting to MongoDb. Check MONGODB_URI in env.sh');
   process.exit(1);
@@ -76,7 +83,13 @@ io.on('connection', function(socket)  {
   socket.on('cmd', function(data) {
     console.log(data);
   });
+  socket.on('sayHi', (data) => {
+    console.log("in socket");
+    console.log(data.hi);
+  })
 });
+
+
 
 //  ***************************  //
 // ***  PASSPORT ROUTES     ***  //
@@ -89,6 +102,9 @@ app.use(session({
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }))
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 passport.use(new LocalStrategy(function(username, password, done){
   console.log('LOCAL STRAT', username, password);
   User.findOne({ username })
@@ -100,7 +116,7 @@ passport.use(new LocalStrategy(function(username, password, done){
       console.log('2');
       done(null, false);
     } else {
-      console.log('3');
+      console.log('user from passport', user);
       done(null, user);
     }
   })
@@ -115,17 +131,19 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.User.findById(id, (err, user) => {
+  User.findById(id, (err, user) => {
+    console.log("user from deserialize", user);
     done(err, user);
   });
 });
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use('/', authRouter(passport));
+
 
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {

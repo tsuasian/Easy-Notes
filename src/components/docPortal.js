@@ -3,15 +3,17 @@ import axios from 'axios'
 class DocPortal extends React.Component {
   constructor(props){
     super(props);
+
     this.state = {
       user: undefined,
       socket: this.props.socket,
-      documents: undefined,
+      documents: [],
       newDocumentName: "",
     }
+
+    this.createDocument = this.createDocument.bind(this);
   }
   componentDidMount() {
-
     //    SETUP USERS
     var self = this;
     axios.get('http://localhost:1337/getUser')
@@ -23,6 +25,13 @@ class DocPortal extends React.Component {
     .catch(e => {
       console.log("error", e);
     })
+
+    //create document
+    this.state.socket.on('documentCreated', (newDocument) => {
+      var documents = self.state.documents.slice();
+      documents.push(newDocument);
+      self.setState({documents})
+    })
   }
 
   onChange(newName){
@@ -30,7 +39,16 @@ class DocPortal extends React.Component {
       newDocumentName: newName
     })
   }
+
+  createDocument()  {
+    console.log("emitting createDoc event");
+    var user = this.state.user.user;
+    var docname = this.state.newDocumentName
+    this.state.socket.emit('createDoc', {user, docname})
+  }
+
   render() {
+    console.log(this.state.user);
     return (
       <div className="container">
         <div className="header">
@@ -50,7 +68,7 @@ class DocPortal extends React.Component {
         <button
           type="button"
           className="login-btn"
-          onClick
+          onClick={this.createDocument}
           >
           Save Document
         </button>

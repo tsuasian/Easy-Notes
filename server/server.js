@@ -14,7 +14,7 @@ import LocalStrategy from 'passport-local';
 import MongoStoreLib from 'connect-mongo';
 var MongoStore = MongoStoreLib(session);
 import User from './models/user'
-
+import Document from './models/document'
 import apiRouter from './routes/api.js'
 
 
@@ -90,6 +90,7 @@ io.on('connection', function(socket)  {
 
   //CREATE DOC
   socket.on('createDoc', ({user, name}) => {
+    console.log('got to createDoc socket on server');
     User.findById(user._id).then(user => {
       var newDocument = new Document({
         owner: user._id,

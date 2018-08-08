@@ -53,15 +53,11 @@ export default router;
 
 // //on frontend
 // //on component did mount, grab a user and throw it in state
-// socket.emit('createDoc', {user, name})
+// 
 //
 // componentDidMount() {
 //   var self = this;
-//   socket.on('documentCreated', (newDocument) => {
-//     var documents = self.state.slice();
-//     documents.push(newDocument);
-//     self.setState({documents})
-//   })
+
 // }
 //
 //

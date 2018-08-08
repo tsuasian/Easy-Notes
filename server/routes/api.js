@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 import Document from '../models/document';
 
-
 router.post('/createDocument', function(req, res) {
   console.log('got to create document');
   console.log(req);
@@ -69,17 +68,3 @@ export default router;
 //
 //
 // // on Backend
-// socket.on('createDoc', ({user, name}) => {
-//   User.findById(user._id).then(user => {
-//     var newDocument = new Document({
-//       owner: user._id,
-//       collaborator: [],
-//       name
-//     });
-//
-//     newDocument.save();
-//     user.documents.push(newDocument);
-//     user.save();
-//     socket.emit('documentCreated', newDocument)
-//   });
-// })

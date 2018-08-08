@@ -1,6 +1,7 @@
 import React from 'react';
 import Login from './components/login/login'
 import Document from './components/textEditor/document';
+import DocPortal from './components/docPortal';
 import io from 'socket.io-client';
 import axios from 'axios';
 const dbUrl = 'http://localhost:1337';
@@ -47,18 +48,14 @@ export default class App extends React.Component {
     })
   }
 
-
-
-
   componentDidMount() {
     console.log('COMPONENTDIDMOUNT');
-
     this.state.socket.emit('sayHi', {hi: "hi"})
   }
 
   render() {
     return (<div className="root-container">
-      {this.state.loggedIn?  <Document socket={this.state.socket}/> :
+      {this.state.loggedIn?  <DocPortal socket={this.state.socket}/> :
           <Login registerUser={this.registerUser} loginUser={this.loginUser}/> }
     </div>);
   }

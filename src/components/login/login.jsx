@@ -11,24 +11,31 @@ export default class Login extends Component {
   })
 
   onLogin = () => {
-    const {username, password} = this.state
-    const {socket, navigate} = this.props
+    const {username, password} = this.state;
+    const {socket, navigate} = this.props;
+    this.props.loginUser(this.state.username, this.state.password);
 
     // socket.emit('login', {username, password}, (res) => {
     //   navigate(DocumentList)
     // })
 
   }
+  //  TODO: INVALID REGISTRATION FOR NON-UNIQUE USERNAMES
   onRegister = () => {
-    const {username, password, password2, name} = this.state
+    const {username, password, password2, name} = this.state;
     const {socket, navigate} = this.props;
     console.log("username/pass", this.state.username, this.state.password);
-    if (this.props.registerUser(this.state.username, this.state.password)){
-      //successfully registered:
-
-    }
+    this.props.registerUser(this.state.username, this.state.password, (response) => {
+      //set callback function to retrieve response promise from registerUser in parent class
+      if (response.data){
+        this.onToggleMode()
+        this.setState({
+          username: "",
+          password: ""
+        })
+      };
+    });
     // TODO: if(password !== password2) return this.setState({validation:'Passwords not the same'})
-
     // socket.emit('register', {username, password, name}, (res) => {
     //   navigate(DocumentList)
     // })

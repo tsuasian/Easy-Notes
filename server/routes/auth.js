@@ -7,14 +7,14 @@ import session from 'express-session'
 
 export default function(passport){
 /* GET home page. */
-router.get('/signup', function(req, res){
-  // res.render('signup');
-});
+// router.get('/signup', function(req, res){
+//   // res.render('signup');
+// });
 
-router.get('/login', function(req, res) {
-  console.log("LOGIN GET");
-  // res.render('login')
-});
+// router.get('/login', function(req, res) {
+//   console.log("LOGIN GET");
+//   // res.render(login')
+// });
 
 router.post('/signup', function(req, res){
   new User({
@@ -31,15 +31,33 @@ router.post('/signup', function(req, res){
   })
 });
 
-router.post('/login', passport.authenticate('local', {
-  // successRedirect: '/',
-  // failureRedirect: '/login'
-}));
+//user null if not logged in
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+      if (!err && user) {
+        req.login(user, (err) => {
+          if (err) {
+            res.status(500)
+              .json({ success: false, err: err });
+          } else {
+            res.status(200)
+              .json({ success: true });
+          }
+        })
+      } else {
+        console.log('hit else');
+        res.status(500)
+          .json({ success: false });
+      }
+    })(req, res, next);
+  });
 
-router.get('/logout', function(req, res){
-  // req.logout;
-  // res.redirect('login')
-});
+
+  router.get('/getUser', (req, res, next) => {
+    res.json({user: req.user})
+  })
+
+
 
 
 return router;

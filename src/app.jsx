@@ -1,6 +1,7 @@
 import React from 'react';
 import Login from './components/login/login'
 import Document from './components/textEditor/document';
+
 import io from 'socket.io-client';
 import axios from 'axios';
 const dbUrl = 'http://localhost:1337';
@@ -52,9 +53,12 @@ export default class App extends React.Component {
   }
 
   render() {
-    return (<div className="root-container">
-      {this.state.loggedIn?  <Document/> :
-          <Login registerUser={this.registerUser}/> }
-    </div>);
+    return (
+      // <div className="root-container">
+      //   {this.state.loggedIn?  <Document/> :
+      //     <Login registerUser={this.registerUser}/> }
+      // </div>
+      <Document/>
+    );
   }
 }

@@ -105,13 +105,27 @@ io.on('connection', function(socket)  {
       socket.emit('documentCreated', newDocument)
     });
   })
+
+  //LOAD DOC
+  socket.on('loadDoc', ({user}) => {
+    console.log(user);
+    let arr = [] //array of document objects
+    for (var document in user.user.documents){
+      Document.findById(document).then(doc => {
+        arr.push(doc)
+      })
+    }
+
+    console.log("arr of document objects", arr);
+    socket.emit('docsLoaded', arr)
+  })
 });
 
 
 
 //  ***************************  //
 // ***  PASSPORT ROUTES     ***  //
-//  ***************************  //
+//  ***************************    //
 
 app.use(session({
   secret: 'keyboard cat',

@@ -101,7 +101,7 @@ io.on('connection', function(socket)  {
       });
       //make new document contents. editorState is the <Editor/> setState
       //i.e. the actual contents
-      var newDocumentContents = new DocumentContents({
+      var newDocumentContents = new DocumentContent({
         documentId: newDocument._id,
         editorState:{}
       })

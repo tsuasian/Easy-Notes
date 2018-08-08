@@ -134,7 +134,7 @@ io.on('connection', function(socket)  {
   //LOAD DOCUMENT CONTENTS
   socket.on('loadDocumentContents', ({documentId}) => {
     console.log("document id from socket", documentId);
-    //
+    //grab documentcontents from documentcontent
   })
 
 

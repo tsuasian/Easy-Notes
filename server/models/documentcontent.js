@@ -9,6 +9,6 @@ const DocumentContentSchema = new mongoose.Schema({
   editorState: Object,
 });
 
-const DocumentContent = mongoose.model('Document', DocumentContentSchema);
+const DocumentContent = mongoose.model('DocumentContent', DocumentContentSchema);
 
 module.exports = DocumentContent;

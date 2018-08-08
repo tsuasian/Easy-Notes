@@ -8,6 +8,8 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
+import FormatSize from '@material-ui/icons/FormatSize';
+
 const fontSizes = [ 12,18,22,30,40,60 ];
 
 
@@ -35,9 +37,8 @@ class FontMenu extends React.Component {
         <Button
           aria-owns={this.props.fontOpen ? 'font-popper' : null}
           aria-haspopup="true"
-          variant="contained"
           onClick={(e) => this._setFontAnchorEl(e)}>
-          Change Font
+          <FormatSize />
         </Button>
         <Popover
           id="font-popper"  //the

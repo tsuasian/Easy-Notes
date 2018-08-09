@@ -90,7 +90,7 @@ class Document extends React.Component {
   _onLeftAlignClick() {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'left'));
   }
-  _onCenterAlignClick
+  
   _onCenterAlignClick() {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'center'));
   }
@@ -132,7 +132,7 @@ class Document extends React.Component {
 
   _onSaveClick(e){
     var rawJsonEditorState = convertToRaw(this.state.editorState.getCurrentContent()); //maybe EditorState.convertToRaw(this.state.editorState.getCurrentContent());
-    this.state.socket.emit('saveDocument', {documentId: this.props.document.documentId, editorState: rawJsonEditorState})
+    this.state.socket.emit('saveDocumentContents', {documentId: this.props.document.documentId, editorState: rawJsonEditorState})
   }
 
   _onShareClick(e){

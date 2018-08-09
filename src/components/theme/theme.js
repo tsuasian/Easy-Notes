@@ -5,10 +5,17 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#4fc3f7',
+      light: '#c2eafc',
+      main: '#b3e5fc',
+      dark: '#7da0b0'
     },
     secondary: {
-      main: '#f8bbd0',
+      light: '#f6a5c0',
+      main: '#f48fb1',
+      dark: '#aa647b'
+    },
+    backgroundColor: {
+      default: '#000000'
     }
   },
   overrides: {
@@ -24,6 +31,14 @@ const theme = createMuiTheme({
         // boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
       },
     },
+    MuiTypography: {
+      colorTextPrimary: {
+        color:"#FFFFFF"
+      },
+      colorTextSecondary: {
+        color: "#000000",
+      }
+    }
   },
   typography: {
     fontFamily: [
@@ -38,8 +53,6 @@ const theme = createMuiTheme({
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
     ].join(','),
-    colorTextPrimary: "white",
-    colorTextSecondary: "black"
   }
 });
 

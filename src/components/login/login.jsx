@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 export default class Login extends Component {
   constructor(props) {
@@ -60,7 +62,7 @@ export default class Login extends Component {
         <div className="box">
           <div className="input-group">
             <label htmlFor="username">Username</label>
-            <input
+            <TextField
               onChange={this.onChange('username')}
               value={this.state.username}
               id="username"
@@ -71,7 +73,7 @@ export default class Login extends Component {
           </div>
           <div className="input-group">
             <label htmlFor="password">Password</label>
-            <input
+            <TextField
               id="password"
               onChange={this.onChange('password')}
               type="password"
@@ -81,18 +83,18 @@ export default class Login extends Component {
               placeholder="Password"/>
           </div>
 
-          <button
-            type="button"
+          <Button
+            type="Button"
             className="login-btn"
             onClick={this.onLogin}
             >Login
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            type="Button"
             className="login-btn"
             onClick={this.onToggleMode}
             >Register
-          </button>
+          </Button>
         </div>
       </div>
       </div>
@@ -107,7 +109,7 @@ export default class Login extends Component {
         <div className="box">
           <div className="input-group">
             <label htmlFor="username">Username</label>
-            <input
+            <TextField
               id="username"
               onChange={this.onChange('username')}
               value={this.state.username}
@@ -118,7 +120,7 @@ export default class Login extends Component {
           </div>
           <div className="input-group">
             <label htmlFor="password">Password</label>
-            <input
+            <TextField
               id="password"
               onChange={this.onChange('password')}
               value={this.state.password}
@@ -129,7 +131,7 @@ export default class Login extends Component {
           </div>
           <div className="input-group">
             <label htmlFor="password2">Retype Password</label>
-            <input
+            <TextField
               id="password2"
               onChange={this.onChange('password2')}
               value={this.state.password2}
@@ -138,17 +140,17 @@ export default class Login extends Component {
               className="login-input"
               placeholder="Password"/>
           </div>
-          <button
-            type="button"
+          <Button
+            type="Button"
             className="login-btn"
             onClick={this.onRegister}>Register
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            type="Button"
             className="login-btn"
             onClick={this.onToggleMode}
             >Cancel
-          </button>
+          </Button>
         </div>
       </div>
       </div>

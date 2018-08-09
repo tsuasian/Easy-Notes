@@ -45,7 +45,6 @@ router.post('/login', (req, res, next) => {
           }
         })
       } else {
-        console.log('hit else');
         res.status(500)
           .json({ success: false });
       }

@@ -6,7 +6,7 @@ import Document from './components/textEditor/document';
 import DocPortal from './components/docPortal';
 import io from 'socket.io-client';
 import axios from 'axios';
-const dbUrl = 'http://56804821.ngrok.io';
+const dbUrl = 'http://85f58c52.ngrok.io';
 
 export default class App extends React.Component {
   constructor(props){

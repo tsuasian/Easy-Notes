@@ -60,11 +60,17 @@ class Document extends React.Component {
   }
 
   componentDidMount(){
-    if (this.props.editorState){
-      var convertedEditorState = convertFromRaw(this.props.editorState);
+    console.log('in component did mount: this.props.docContent: ', this.props.docContent)
+    if (this.props.docContent.editorState === null){
+      null;
+    } else{
+      console.log('in else in component did mount, editor state: ', this.props.docContent.editorState)
+      var convertedEditorState = convertFromRaw(JSON.parse(this.props.docContent.editorState));
+      console.log('converted back to editor state: ', convertedEditorState);
       this.setState({
-        editorState: convertedEditorState
-      })
+          editorState: EditorState.createWithContent(convertedEditorState)
+      });
+      console.log('after setState')
     }
   }
 
@@ -131,8 +137,9 @@ class Document extends React.Component {
   }
 
   _onSaveClick(e){
+    console.log(this.state)
     var rawJsonEditorState = convertToRaw(this.state.editorState.getCurrentContent()); //maybe EditorState.convertToRaw(this.state.editorState.getCurrentContent());
-    this.state.socket.emit('saveDocumentContents', {documentId: this.props.document.documentId, editorState: rawJsonEditorState})
+    this.state.socket.emit('saveDocumentContents', {documentId: this.props.docSummary._id, editorState: JSON.stringify(rawJsonEditorState)})
   }
 
   _onShareClick(e){
@@ -153,7 +160,7 @@ class Document extends React.Component {
     return(
       <div>
         <div className="docshare-toolbar">
-          <Button className="toolbar-btn" onClick={(e) => this._onSaveClick(e)}>
+          <Button className="toolbar-btn" onClick={this._onSaveClick.bind(this)}>
             <SaveAlt />
           </Button><Button className="toolbar-btn" onClick={(e) => this._onShareClick(e)}>
             <CloudUpload />

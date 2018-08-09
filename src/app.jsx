@@ -6,7 +6,7 @@ import Document from './components/textEditor/document';
 import DocPortal from './components/docPortal';
 import io from 'socket.io-client';
 import axios from 'axios';
-const dbUrl = 'http://56804821.ngrok.io';
+const dbUrl = 'http://85f58c52.ngrok.io';
 
 export default class App extends React.Component {
   constructor(props){
@@ -83,7 +83,7 @@ export default class App extends React.Component {
     return (
       this.state.loggedIn
       ? (this.state.docSummary && this.state.docContent)
-        ? <Document setNull={this.setDocChosenToNull.bind(this)} docSummary={this.state.docSummary} docContent={this.state.docContent}/>
+        ? <Document setNull={this.setDocChosenToNull.bind(this)} docSummary={this.state.docSummary} docContent={this.state.docContent} socket={this.state.socket}/>
         : <DocPortal socket={this.state.socket} setSummary={this.setSummary.bind(this)} setContents={this.setContents.bind(this)}/>
       : <LogReg registerUser={this.registerUser} loginUser={this.loginUser}/>
     );

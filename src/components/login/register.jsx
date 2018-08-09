@@ -55,14 +55,15 @@ export default class Register extends React.Component{
       password2: "",
     });
     alert('Username already exists');
-    this.props.resetUsernameExists();
+    this.props.resetUsernameExists()
   }
 
 
   render(){
-    usernameExists
-    ? usernameExistsErr();
-    : null
+    console.log('register.jsx usernameExists', this.props.usernameExists)
+    if(this.props.usernameExists){
+      this.usernameExistsErr();
+    }
     return (
       <div className="box-container">
         <MuiThemeProvider theme={theme}>

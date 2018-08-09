@@ -30,22 +30,23 @@ export default class App extends React.Component {
 ////****************************************************
 ////****************************************************
 
-  registerUser(username, password){  //got rid of cb here... what was it for? @sean
-    var self = this;
+  registerUser = (username, password) => {  //got rid of cb here... what was it for? @sean
+
+    console.log(this.state)
+
+
     axios.post(dbUrl + '/signup', {username: username, password: password})
     .then(function(response) {
-        console.log("(success) response register", response);
-        if (response.status==420){
-          console.log('User Already Exists')
-          self.setState({
-            usernameExists: true,
-          })
-        }
-        // cb(response);
+      console.log("(success) response register", response);
     })
-    .catch(function(error)  {
+    .catch( (error) => {
       console.log("(error registering)", error);
+      // console.log('error response: ', response)
       // cb(null);
+      console.log('User Already Exists')
+      this.setState({
+        usernameExists: true,
+      })
     })
   }
 
@@ -86,19 +87,21 @@ export default class App extends React.Component {
     });
   }
 
-  resetUsernameExists(){
+  resetUsernameExists = () =>{
     this.setState({
       usernameExists: false,
     })
   }
 
   render() {
+
+    console.log(this.state.usernameExists);
     return (
       this.state.loggedIn
       ? (this.state.docSummary && this.state.docContent)
         ? <Document setNull={this.setDocChosenToNull.bind(this)} docSummary={this.state.docSummary} docContent={this.state.docContent} socket={this.state.socket}/>
         : <DocPortal socket={this.state.socket} setSummary={this.setSummary.bind(this)} setContents={this.setContents.bind(this)}/>
-      : <LogReg registerUser={this.registerUser} loginUser={this.loginUser} usernameExists={this.state.usernameExists} resetUsernameExists={this.resetUsernameExists.bind(this)}/>
+      : <LogReg registerUser={this.registerUser} loginUser={this.loginUser} usernameExists={this.state.usernameExists} resetUsernameExists={this.resetUsernameExists}/>
     );
   }
 }

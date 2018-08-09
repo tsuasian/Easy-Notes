@@ -27,6 +27,7 @@ class DocPortal extends React.Component {
     axios.get('http://localhost:1337/getUser').then(user => {
       self.setState({user: user.data})
     }).then(() => {
+      console.log(self.state)
       self.state.socket.on('documentCreated', (newDocument) => {
         var documents = self.state.documents.slice();
         //array of document objects

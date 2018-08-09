@@ -7,45 +7,46 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
-
-
-export default class Login extends Component {
+export default class Register extends React.Component{
   constructor(props) {
     super(props);
     this.state={
       mode: true,
       usernmame: "",
       password: "",
+      password2: "",
     }
   }
 
   onChange = (field) => (e) => this.setState({
     [field]: e.target.value
   })
-  onToggleMode = () => this.setState({
-    mode: !this.state.mode
-  })
 
-  onSwitchMode(e){
+  onRegister = () => {
+    const {username, password, password2} = this.state;
+    if (password!==password2){
+      alert("Passwords must match");
+      this.setState({
+        password: "",
+        password2: "",
+      });
+    } else{
+      this.props.onRegister(username, password);
+    }
+  }
+
+  onSwitchMode(){
     this.props.switchMode();
   }
 
-  onLogin = () => {
-    const {username, password} = this.state;
-    this.props.onLogin(username, password);
 
-    // socket.emit('login', {username, password}, (res) => {
-    //   navigate(DocumentList)
-    // })
-
-  }
-  render() {
+  render(){
     return (
       <div className="box-container">
         <AppBar position="static" color="default">
           <Toolbar>
             <Typography variant="title" color="inherit">
-              Login
+              Register
             </Typography>
           </Toolbar>
         </AppBar>
@@ -54,29 +55,31 @@ export default class Login extends Component {
             <TextField
               onChange={this.onChange('username')}
               value={this.state.username}
+              id="username"
               type="text"
               placeholder="Username"/>
-
             <TextField
               onChange={this.onChange('password')}
               type="password"
               value={this.state.password}
               placeholder="Password"/>
+              <TextField
+                onChange={this.onChange('password2')}
+                type="password"
+                value={this.state.password2}
+                placeholder="Retype Password"/>
               <Button
-                type="Button"
-                className="login-btn"
-                onClick={this.onLogin}
-                >Login
+                onClick={this.onRegister}
+                >Register
               </Button>
               <Button
-                type="Button"
-                className="login-btn"
                 onClick={this.onSwitchMode.bind(this)}
-                >Register
+                >Login
               </Button>
           </Paper>
         </div>
       </div>
-    );
+
+    )
   }
 }

@@ -139,7 +139,7 @@ io.on('connection', function(socket)  {
     //grab documentcontents from documentcontent
     DocumentContent.findOne({documentId:documentId})
     .then( (docContent) => {
-      console.log('found document contents', docContent);
+      console.log('FOUND document contents', docContent);
       socket.emit('documentContentsLoaded', docContent);
     })
   })
@@ -168,7 +168,7 @@ io.on('connection', function(socket)  {
     })
   });
 
-  
+
 
 
 });

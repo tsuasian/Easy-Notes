@@ -70,11 +70,20 @@ export default class App extends React.Component {
     })
   }
 
+  setDocChosenToNull(){
+    //will now evalute to false, will go back
+    console.log('in set chosen to null');
+    this.setState({
+      docContent: null,
+      docSummary: null,
+    });
+  }
+
   render() {
     return (
       this.state.loggedIn
       ? (this.state.docSummary && this.state.docContent)
-        ? <Document docSummary={this.state.docSummary} docContent={this.state.docContent}/>
+        ? <Document setNull={this.setDocChosenToNull.bind(this)} docSummary={this.state.docSummary} docContent={this.state.docContent} socket={this.state.socket}/>
         : <DocPortal socket={this.state.socket} setSummary={this.setSummary.bind(this)} setContents={this.setContents.bind(this)}/>
       : <LogReg registerUser={this.registerUser} loginUser={this.loginUser}/>
     );

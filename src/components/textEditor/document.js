@@ -20,7 +20,7 @@ import FormatAlignCenter from '@material-ui/icons/FormatAlignCenter';
 import FormatAlignLeft from '@material-ui/icons/FormatAlignLeft';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import CloudUpload from '@material-ui/icons/CloudUpload';
-
+import Home from '@material-ui/icons/Home'
 const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
 const styleMap = {
   'STRIKETHROUGH': {
@@ -60,11 +60,17 @@ class Document extends React.Component {
   }
 
   componentDidMount(){
-    if (this.props.editorState){
-      var convertedEditorState = convertFromRaw(this.props.editorState);
+    console.log('in component did mount: this.props.docContent: ', this.props.docContent)
+    if (this.props.docContent.editorState === null){
+      null;
+    } else{
+      console.log('in else in component did mount, editor state: ', this.props.docContent.editorState)
+      var convertedEditorState = convertFromRaw(JSON.parse(this.props.docContent.editorState));
+      console.log('converted back to editor state: ', convertedEditorState);
       this.setState({
-        editorState: convertedEditorState
-      })
+          editorState: EditorState.createWithContent(convertedEditorState)
+      });
+      console.log('after setState')
     }
   }
 
@@ -90,7 +96,7 @@ class Document extends React.Component {
   _onLeftAlignClick() {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'left'));
   }
-  
+
   _onCenterAlignClick() {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'center'));
   }
@@ -131,12 +137,17 @@ class Document extends React.Component {
   }
 
   _onSaveClick(e){
+    console.log(this.state)
     var rawJsonEditorState = convertToRaw(this.state.editorState.getCurrentContent()); //maybe EditorState.convertToRaw(this.state.editorState.getCurrentContent());
-    this.state.socket.emit('saveDocumentContents', {documentId: this.props.document.documentId, editorState: rawJsonEditorState})
+    this.state.socket.emit('saveDocumentContents', {documentId: this.props.docSummary._id, editorState: JSON.stringify(rawJsonEditorState)})
   }
 
   _onShareClick(e){
     this.state.socket.emit('shareDocument', {documentId: this.props.document.documentId}) //need to add a newUserId parameter to this emit
+  }
+
+  _onBackClick() {
+    this.props.docSummary();
   }
 
   render(){
@@ -149,10 +160,13 @@ class Document extends React.Component {
     return(
       <div>
         <div className="docshare-toolbar">
-          <Button className="toolbar-btn" onClick={(e) => this._onSaveClick(e)}>
+          <Button className="toolbar-btn" onClick={this._onSaveClick.bind(this)}>
             <SaveAlt />
           </Button><Button className="toolbar-btn" onClick={(e) => this._onShareClick(e)}>
             <CloudUpload />
+          </Button>
+          <Button className="toolbar-btn" onClick={()=>this.props.setNull()}>
+            <Home/>
           </Button>
         </div>
         <div className="toolbar">

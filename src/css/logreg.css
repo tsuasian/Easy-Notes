@@ -1,11 +1,4 @@
 .box-container {
-  /* display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid black;
-  border-radius: 5px;
-  flex-direction: column; */
-
   height: 100%;
   width: 100%;
 }

@@ -6,6 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import TextField from '@material-ui/core/TextField';
 
 class DocPortal extends React.Component {
   constructor(props) {
@@ -50,25 +51,34 @@ class DocPortal extends React.Component {
   }
 
   createDocument() {
-    console.log("emitting createDoc event");
-    var user = this.state.user.user;
-    var name = this.state.newDocumentName
-    // console.log("document name", docname);
-    this.state.socket.emit('createDoc', {user, name})
+    if (this.state.newDocumentName) {
+      console.log("emitting createDoc event");
+      var user = this.state.user.user;
+      var name = this.state.newDocumentName
+      // console.log("document name", docname);
+      this.state.socket.emit('createDoc', {user, name})
+      this.setState({
+        newDocumentName: ''
+      })
+    } else {
+      alert("Please give your document a name!")
+    }
   }
 
   render() {
     return (<div className="container-docportal">
       <div className="navbar-container">
-        <AppBar position="static">
+        <AppBar position="static" color="default">
+          <Toolbar>
+            <Typography variant="title" color="inherit">
+                {
+                  this.state.user
+                    ? this.state.user.user.username + "'s documents"
+                    : 'loading'
+                }
+            </Typography>
+          </Toolbar>
         </AppBar>
-      </div>
-      <div className="header">
-        {
-          this.state.user
-            ? this.state.user.user.username + "'s documents"
-            : 'loading'
-        }
       </div>
 
       {/* documents pulled from db */}
@@ -81,19 +91,22 @@ class DocPortal extends React.Component {
       </div>
 
       {/* add new document */}
-      <div>
-        <input id="newDocumentName"
-          onChange={(e) => this.setState({newDocumentName: e.target.value})}
-          type="text" name="newDocumentName"
-          value={this.state.newDocumentName}
-          className="login-input"
-          placeholder="New Document Name"/>
+      <div className="newDocDiv">
+        <div id="test">
+          <TextField id="newDocumentName"
+            onChange={(e) => this.setState({newDocumentName: e.target.value})}
+            type="text" name="newDocumentName"
+            value={this.state.newDocumentName}
+            className="login-input"
+            placeholder="New Document Name"/>
+        </div>
+        <div>
+          <Button type="button" className="login-btn" onClick={this.createDocument}>
+            Save Document
+          </Button>
+        </div>
       </div>
-      <div>
-        <button type="button" className="login-btn" onClick={this.createDocument}>
-          Save Document
-        </button>
-      </div>
+
     </div>);
   }
 }

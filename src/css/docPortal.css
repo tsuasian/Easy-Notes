@@ -2,12 +2,24 @@
   display:flex;
   flex-direction: column;
   width: inherit;
+  padding: 10px;
+  border: 2px solid black;
+  margin-bottom: 10px
 }
 
 .container-docportal {
   width: 100%;
 }
 
-.documents-rendered {
+.docTypoDiv {
+  font-family: "Roboto";
+  color: "white";
+}
 
+.newDocDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
 }

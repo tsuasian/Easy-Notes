@@ -54,7 +54,7 @@ export default class Login extends Component {
         <div className="box">
           <div className="input-group">
             <label htmlFor="username">Username</label>
-            <TextField
+            <Text
               onChange={this.onChange('username')}
               value={this.state.username}
               id="username"
@@ -65,7 +65,7 @@ export default class Login extends Component {
           </div>
           <div className="input-group">
             <label htmlFor="password">Password</label>
-            <TextField
+            <Text
               id="password"
               onChange={this.onChange('password')}
               type="password"
@@ -101,7 +101,7 @@ export default class Login extends Component {
         <div className="box">
           <div className="input-group">
             <label htmlFor="username">Username</label>
-            <TextField
+            <Text
               id="username"
               onChange={this.onChange('username')}
               value={this.state.username}
@@ -112,7 +112,7 @@ export default class Login extends Component {
           </div>
           <div className="input-group">
             <label htmlFor="password">Password</label>
-            <TextField
+            <Text
               id="password"
               onChange={this.onChange('password')}
               value={this.state.password}
@@ -123,7 +123,7 @@ export default class Login extends Component {
           </div>
           <div className="input-group">
             <label htmlFor="password2">Retype Password</label>
-            <TextField
+            <Text
               id="password2"
               onChange={this.onChange('password2')}
               value={this.state.password2}

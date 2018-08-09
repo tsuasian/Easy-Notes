@@ -27,6 +27,7 @@ class DocPortal extends React.Component {
     axios.get('http://localhost:1337/getUser').then(user => {
       self.setState({user: user.data})
     }).then(() => {
+      console.log(self.state)
       self.state.socket.on('documentCreated', (newDocument) => {
         var documents = self.state.documents.slice();
         //array of document objects
@@ -87,7 +88,12 @@ class DocPortal extends React.Component {
 
       {/* add new document */}
       <div>
-        <input id="newDocumentName" onChange={(e) => this.setState({newDocumentName: e.target.value})} type="text" name="newDocumentName" value={this.state.newDocumentName} className="login-input" placeholder="New Document Name"/>
+        <input id="newDocumentName"
+          onChange={(e) => this.setState({newDocumentName: e.target.value})}
+          type="text" name="newDocumentName"
+          value={this.state.newDocumentName}
+          className="login-input"
+          placeholder="New Document Name"/>
       </div>
       <div>
         <button type="button" className="login-btn" onClick={this.createDocument}>

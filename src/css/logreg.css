@@ -17,5 +17,22 @@
   width: 280px;
   align-items: center;
   justify-content: center;
-
 }
+
+.lastinputLog {
+  margin-bottom: 200px
+}
+
+.usernameText {
+  display: inline-block;
+}
+
+.iconsyay {
+  margin-right: 5px;
+  margin-bottom: -8px;
+}
+
+/* svg.MuiSvgIcon-root-116.test {
+  margin-right: 5px;
+  margin-top: -5px;
+} */

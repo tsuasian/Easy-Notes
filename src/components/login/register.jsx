@@ -9,6 +9,11 @@ import Paper from '@material-ui/core/Paper';
 import theme from '../theme/theme.js'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
+import Person from '@material-ui/icons/Person';
+import Lock from '@material-ui/icons/Lock';
+import Assignment from '@material-ui/icons/Assignment';
+import Face from '@material-ui/icons/Face';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 export default class Register extends React.Component{
   constructor(props) {
@@ -47,6 +52,7 @@ export default class Register extends React.Component{
     return (
       <div className="box-container">
         <MuiThemeProvider theme={theme}>
+        <CssBaseline />
         <AppBar position="static" color="primary">
           <Toolbar>
             <Typography variant="title" color="textPrimary">
@@ -56,22 +62,36 @@ export default class Register extends React.Component{
         </AppBar>
         <div className="loginPageBody">
           <Paper className="loginPaper" elevation={1}>
-            <TextField
-              onChange={this.onChange('username')}
-              value={this.state.username}
-              id="username"
-              type="text"
-              placeholder="Username"/>
-            <TextField
-              onChange={this.onChange('password')}
-              type="password"
-              value={this.state.password}
-              placeholder="Password"/>
+            <Face />
+            <div className="usernameText">
+              <Person className="iconsyay"/>
               <TextField
+                onChange={this.onChange('username')}
+                value={this.state.username}
+                id="username"
+                margin="normal"
+                type="text"
+                placeholder="Username"/>
+            </div>
+            <div className="usernameText">
+              <Lock className="iconsyay"/>
+              <TextField
+                onChange={this.onChange('password')}
+                type="password"
+                margin="normal"
+                value={this.state.password}
+                placeholder="Password"/>
+            </div>
+            <div className="usernameText">
+              <Lock className="iconsyay"/>
+              <TextField
+                className="lastinputLog"
                 onChange={this.onChange('password2')}
                 type="password"
                 value={this.state.password2}
+                margin="normal"
                 placeholder="Retype Password"/>
+            </div>
               <Button
                 onClick={this.onRegister}
                 >Register

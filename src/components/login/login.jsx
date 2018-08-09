@@ -9,8 +9,11 @@ import Paper from '@material-ui/core/Paper';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
 import theme from '../theme/theme.js'
-
-
+import Person from '@material-ui/icons/Person';
+import Lock from '@material-ui/icons/Lock';
+import Assignment from '@material-ui/icons/Assignment';
+import Face from '@material-ui/icons/Face';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 export default class Login extends Component {
   constructor(props) {
@@ -46,6 +49,7 @@ export default class Login extends Component {
     return (
       <div className="box-container">
         <MuiThemeProvider theme={theme}>
+          <CssBaseline />
           <AppBar position="static" color="primary">
             <Toolbar>
               <Typography variant="title" color="textPrimary">
@@ -55,17 +59,27 @@ export default class Login extends Component {
           </AppBar>
           <div className="loginPageBody">
             <Paper className="loginPaper" elevation={1}>
-              <TextField
-                onChange={this.onChange('username')}
-                value={this.state.username}
-                type="text"
-                placeholder="Username"/>
-
-              <TextField
-                onChange={this.onChange('password')}
-                type="password"
-                value={this.state.password}
-                placeholder="Password"/>
+              <Assignment />
+              <div className="usernameText">
+                <Person className="iconsyay"/>
+                <TextField
+                  onChange={this.onChange('username')}
+                  value={this.state.username}
+                  type="text"
+                  margin="normal"
+                  placeholder="Username"
+                  />
+              </div>
+              <div className="usernameText">
+                <Lock className="iconsyay" />
+                <TextField
+                  className="lastinputLog"
+                  onChange={this.onChange('password')}
+                  type="password"
+                  value={this.state.password}
+                  margin="normal"
+                  placeholder="Password"/>
+              </div>
                 <Button
                   type="Button"
                   className="login-btn"

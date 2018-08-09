@@ -100,6 +100,7 @@ class DocPortal extends React.Component {
   }
 
   render() {
+    
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
       <div className="navbar-container">

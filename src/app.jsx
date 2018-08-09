@@ -16,7 +16,7 @@ export default class App extends React.Component {
       socket:  io(dbUrl),
       docSummary: null,
       docContent: null,
-
+      usernameExists: false,
     };
     this.loginUser = this.loginUser.bind(this)
   }
@@ -31,9 +31,16 @@ export default class App extends React.Component {
 ////****************************************************
 
   registerUser(username, password){  //got rid of cb here... what was it for? @sean
+    var self = this;
     axios.post(dbUrl + '/signup', {username: username, password: password})
     .then(function(response) {
         console.log("(success) response register", response);
+        if (response.status==420){
+          console.log('User Already Exists')
+          self.setState({
+            usernameExists: true,
+          })
+        }
         // cb(response);
     })
     .catch(function(error)  {
@@ -79,13 +86,19 @@ export default class App extends React.Component {
     });
   }
 
+  resetUsernameExists(){
+    this.setState({
+      usernameExists: false,
+    })
+  }
+
   render() {
     return (
       this.state.loggedIn
       ? (this.state.docSummary && this.state.docContent)
         ? <Document setNull={this.setDocChosenToNull.bind(this)} docSummary={this.state.docSummary} docContent={this.state.docContent} socket={this.state.socket}/>
         : <DocPortal socket={this.state.socket} setSummary={this.setSummary.bind(this)} setContents={this.setContents.bind(this)}/>
-      : <LogReg registerUser={this.registerUser} loginUser={this.loginUser}/>
+      : <LogReg registerUser={this.registerUser} loginUser={this.loginUser} usernameExists={this.state.usernameExists} resetUsernameExists={this.resetUsernameExists.bind(this)}/>
     );
   }
 }

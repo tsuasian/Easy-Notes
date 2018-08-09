@@ -57,7 +57,7 @@ export default class App extends React.Component {
   render() {
     return (
       this.state.loggedIn
-      ? <DocPortal/>
+      ? <DocPortal socket={this.state.socket}/>
       : <LogReg registerUser={this.registerUser} loginUser={this.loginUser}/>
     );
   }

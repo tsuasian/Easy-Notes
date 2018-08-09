@@ -42,7 +42,7 @@ class DocPortal extends React.Component {
   componentDidMount() {
     //    SETUP USERS
     var self = this;
-    axios.get('http://85f58c52.ngrok.io/getUser').then(user => {
+    axios.get('http://localhost:1337/getUser').then(user => {
       self.setState({user: user.data})
     }).then(() => {
       self.state.socket.on('documentCreated', (newDocument) => {
@@ -100,7 +100,7 @@ class DocPortal extends React.Component {
   }
 
   render() {
-    
+
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
       <div className="navbar-container">

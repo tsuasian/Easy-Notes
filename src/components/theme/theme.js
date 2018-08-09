@@ -38,6 +38,8 @@ const theme = createMuiTheme({
       colorTextSecondary: {
         color: "#000000",
       }
+    },
+    MuiAppBar: {
     }
   },
   typography: {
@@ -53,6 +55,7 @@ const theme = createMuiTheme({
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
     ].join(','),
+    fontSize: 14,
   }
 });
 

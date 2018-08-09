@@ -7,9 +7,6 @@ import DocPortal from './components/docPortal';
 import io from 'socket.io-client';
 import axios from 'axios';
 const dbUrl = 'http://56804821.ngrok.io';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { createMuiTheme } from '@material-ui/core/styles';
-import theme from './components/theme/theme.js'
 
 export default class App extends React.Component {
   constructor(props){
@@ -75,17 +72,11 @@ export default class App extends React.Component {
 
   render() {
     return (
-<<<<<<< HEAD
       this.state.loggedIn
       ? (this.state.docSummary && this.state.docContent)
         ? <Document docSummary={this.state.docSummary} docContent={this.state.docContent}/>
         : <DocPortal socket={this.state.socket} setSummary={this.setSummary.bind(this)} setContents={this.setContents.bind(this)}/>
       : <LogReg registerUser={this.registerUser} loginUser={this.loginUser}/>
-=======
-          this.state.loggedIn
-          ? <DocPortal socket={this.state.socket}/>
-          : <LogReg registerUser={this.registerUser} loginUser={this.loginUser}/>
->>>>>>> 498e07e510738dc47aafffb51eecdb775a555ff1
     );
   }
 }

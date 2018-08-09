@@ -23,6 +23,7 @@ export default class Register extends React.Component{
       username: "",
       password: "",
       password2: "",
+      usernameExists: this.props.usernameExists,
     }
   }
 
@@ -47,8 +48,21 @@ export default class Register extends React.Component{
     this.props.switchMode();
   }
 
+  usernameExistsErr(){
+    this.setState({
+      username: "",
+      password: "",
+      password2: "",
+    });
+    alert('Username already exists');
+    this.props.resetUsernameExists();
+  }
+
 
   render(){
+    usernameExists
+    ? usernameExistsErr();
+    : null
     return (
       <div className="box-container">
         <MuiThemeProvider theme={theme}>

@@ -100,6 +100,7 @@ class DocPortal extends React.Component {
   }
 
   render() {
+    
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
       <div className="navbar-container">
@@ -157,9 +158,11 @@ class DocPortal extends React.Component {
           <TextField id="newDocumentName"
             onChange={(e) => this.setState({newDocumentName: e.target.value})}
             type="text" name="newDocumentName"
+            label="Create New Document"
+            inputProps={{textAlign: 'center'}}
             value={this.state.newDocumentName}
             className="login-input"
-            placeholder="New Document Name"/>
+            placeholder="Enter New Document Name"/>
         </div>
         <div>
           <MuiThemeProvider>

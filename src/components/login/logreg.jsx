@@ -35,7 +35,7 @@ export default class LogReg extends React.Component{
   render(){
     return(
       this.state.mode=='register'
-      ? <Register switchMode={this.switchMode.bind(this)} onRegister={this.onRegister}/>
+      ? <Register switchMode={this.switchMode.bind(this)} onRegister={this.onRegister} usernameExists={this.props.usernameExists} resetUsernameExists={this.props.resetUsernameExists}/>
       : <Login switchMode={this.switchMode.bind(this)} onLogin={this.onLogin}/>
     )
   }

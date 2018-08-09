@@ -20,7 +20,7 @@ import FormatAlignCenter from '@material-ui/icons/FormatAlignCenter';
 import FormatAlignLeft from '@material-ui/icons/FormatAlignLeft';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import CloudUpload from '@material-ui/icons/CloudUpload';
-
+import Home from '@material-ui/icons/Home'
 const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
 const styleMap = {
   'STRIKETHROUGH': {
@@ -90,7 +90,7 @@ class Document extends React.Component {
   _onLeftAlignClick() {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'left'));
   }
-  
+
   _onCenterAlignClick() {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'center'));
   }
@@ -139,6 +139,10 @@ class Document extends React.Component {
     this.state.socket.emit('shareDocument', {documentId: this.props.document.documentId}) //need to add a newUserId parameter to this emit
   }
 
+  _onBackClick() {
+    this.props.docSummary();
+  }
+
   render(){
     const { colorAnchorEl } = this.state;
     const { fontAnchorEl } = this.state;
@@ -153,6 +157,9 @@ class Document extends React.Component {
             <SaveAlt />
           </Button><Button className="toolbar-btn" onClick={(e) => this._onShareClick(e)}>
             <CloudUpload />
+          </Button>
+          <Button className="toolbar-btn" onClick={()=>this.props.setNull()}>
+            <Home/>
           </Button>
         </div>
         <div className="toolbar">

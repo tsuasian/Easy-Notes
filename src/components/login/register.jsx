@@ -20,7 +20,7 @@ export default class Register extends React.Component{
     super(props);
     this.state={
       mode: true,
-      usernmame: "",
+      username: "",
       password: "",
       password2: "",
     }

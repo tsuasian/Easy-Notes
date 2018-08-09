@@ -30,7 +30,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-
+const NGROK_URL = process.env.NGROK_URL;
 class DocPortal extends React.Component {
   constructor(props) {
     super(props);
@@ -49,7 +49,7 @@ class DocPortal extends React.Component {
   componentDidMount() {
     //    SETUP USERS
     var self = this;
-    axios.get('http://localhost:1337/getUser').then(user => {
+    axios.get(NGROK_URL+'/getUser').then(user => {
       self.setState({user: user.data})
     }).then(() => {
       self.state.socket.on('documentCreated', (newDocument) => {

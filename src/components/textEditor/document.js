@@ -60,11 +60,16 @@ class Document extends React.Component {
   }
 
   componentDidMount(){
-    if (this.props.editorState){
-      var convertedEditorState = convertFromRaw(this.props.editorState);
+    console.log('in component did mount: this.props.docContent: ', this.props.docContent)
+    if (this.props.docContent.editorState === null){
+      null;
+    } else{
+      console.log('in else in component did mount, editor state: ', this.props.docContent.editorState)
+      var convertedEditorState = convertFromRaw(this.props.docContent.editorState);
+      console.log('converted back to editor state: ', convertedEditorStates);
       this.setState({
-        editorState: convertedEditorState
-      })
+          editorState: convertedEditorState
+        })
     }
   }
 
@@ -90,7 +95,7 @@ class Document extends React.Component {
   _onLeftAlignClick() {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'left'));
   }
-  
+
   _onCenterAlignClick() {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'center'));
   }
@@ -131,14 +136,22 @@ class Document extends React.Component {
   }
 
   _onSaveClick(e){
+    console.log(this.state)
     var rawJsonEditorState = convertToRaw(this.state.editorState.getCurrentContent()); //maybe EditorState.convertToRaw(this.state.editorState.getCurrentContent());
-    this.state.socket.emit('saveDocumentContents', {documentId: this.props.document.documentId, editorState: rawJsonEditorState})
+
+    this.state.socket.emit('saveDocumentContents', {documentId: this.props.docSummary._id, editorState: JSON.stringify(rawJsonEditorState)})
   }
 
   _onShareClick(e){
     this.state.socket.emit('shareDocument', {documentId: this.props.document.documentId}) //need to add a newUserId parameter to this emit
   }
 
+  fakeConversion(){
+    var currentState = this.state.editorState.getCurrentContent();
+    var rawState = convertToRaw(currentState);
+    console.log('real state', currentState);
+    console.log('raw state', rawState);
+  }
   render(){
     const { colorAnchorEl } = this.state;
     const { fontAnchorEl } = this.state;
@@ -149,7 +162,8 @@ class Document extends React.Component {
     return(
       <div>
         <div className="docshare-toolbar">
-          <Button className="toolbar-btn" onClick={(e) => this._onSaveClick(e)}>
+          <Button onClick={this.fakeConversion.bind(this)}>TestConversion</Button>
+          <Button className="toolbar-btn" onClick={this._onSaveClick.bind(this)}>
             <SaveAlt />
           </Button><Button className="toolbar-btn" onClick={(e) => this._onShareClick(e)}>
             <CloudUpload />

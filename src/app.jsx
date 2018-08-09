@@ -74,7 +74,7 @@ export default class App extends React.Component {
     return (
       this.state.loggedIn
       ? (this.state.docSummary && this.state.docContent)
-        ? <Document docSummary={this.state.docSummary} docContent={this.state.docContent}/>
+        ? <Document docSummary={this.state.docSummary} docContent={this.state.docContent} socket={this.state.socket}/>
         : <DocPortal socket={this.state.socket} setSummary={this.setSummary.bind(this)} setContents={this.setContents.bind(this)}/>
       : <LogReg registerUser={this.registerUser} loginUser={this.loginUser}/>
     );

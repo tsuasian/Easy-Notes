@@ -22,6 +22,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Assignment from '@material-ui/icons/Assignment';
+import Search from '@material-ui/icons/Search';
+import AddIcon from '@material-ui/icons/Add';
 
 class DocPortal extends React.Component {
   constructor(props) {
@@ -40,7 +42,7 @@ class DocPortal extends React.Component {
   componentDidMount() {
     //    SETUP USERS
     var self = this;
-    axios.get('http://56804821.ngrok.io/getUser').then(user => {
+    axios.get('http://85f58c52.ngrok.io/getUser').then(user => {
       self.setState({user: user.data})
     }).then(() => {
       self.state.socket.on('documentCreated', (newDocument) => {
@@ -101,15 +103,18 @@ class DocPortal extends React.Component {
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
       <div className="navbar-container">
-        <AppBar postion="static" color="primary" className="appbarDoc">
+        <AppBar postion="static" color="primary" className="appbarDoc" square={false}>
           <Toolbar>
-            <Typography variant="title" color="textPrimary">
+            <Typography variant="title" color="textPrimary" style={{flexGrow: 1}}>
                 {
                   this.state.user
                     ? this.state.user.user.username + "'s documents"
                     : 'loading'
                 }
             </Typography>
+            <Button varient="fab" className="searchButton">
+              <Search />
+            </Button>
           </Toolbar>
         </AppBar>
       </div>
@@ -119,20 +124,27 @@ class DocPortal extends React.Component {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Document Names</TableCell>
+              <TableCell style={{fontSize: 14}} variant="head">Document Names</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {this.state.documents.map((document) => {
                 return (
-                  <List component="nav">
-                    <ListItem key={document._id} button={true} value={document} onClick={(e)=>this.openDocument(e, document)}>
-                      <ListItemIcon>
-                        <Assignment />
-                      </ListItemIcon>
-                      <ListItemText primary={document.name} />
-                    </ListItem>
-                  </List>
+                  <div className="renderDocsandButton">
+                    <List>
+                      <ListItem className="listDoc" key={document._id} button={true} value={document} onClick={(e)=>this.openDocument(e, document)}>
+                        <ListItemIcon>
+                          <Assignment />
+                        </ListItemIcon>
+                        <ListItemText key={document._id} primary={document.name} />
+                      </ListItem>
+                    </List>
+                    <div className="addCollabDiv">
+                      <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={() => alert('Hello!')}>
+                        <AddIcon />
+                      </Button>
+                    </div>
+                  </div>
                 );
               })}
         </TableBody>
@@ -151,8 +163,8 @@ class DocPortal extends React.Component {
         </div>
         <div>
           <MuiThemeProvider>
-            <Button className="login-btn" onClick={this.createDocument.bind(this)}>
-              Save Document
+            <Button className="login-btn btnStyleCustom" onClick={this.createDocument.bind(this)}>
+              Create New Document
             </Button>
           </MuiThemeProvider>
         </div>

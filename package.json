@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "src/index.js",
-  "proxy": "http://56804821.ngrok.io",
+  "proxy": "http://85f58c52.ngrok.io",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",

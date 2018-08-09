@@ -1,6 +1,8 @@
 import React from 'react';
-import {Editor, EditorState, RichUtils} from 'draft-js'
+import {Editor, EditorState, RichUtils, convertToRaw, convertFromRaw} from 'draft-js'
 import createStyles from 'draft-js-custom-styles';
+import ColorMenu from './ColorMenu';
+import FontMenu from './FontMenu';
 //Material UI components
 import Button from '@material-ui/core/Button';
 import Popover from '@material-ui/core/Popover';
@@ -8,8 +10,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
-import ColorMenu from './ColorMenu';
-import FontMenu from './FontMenu';
+//material ui icons
 import FormatUnderlined from '@material-ui/icons/FormatUnderlined';
 import FormatBold from '@material-ui/icons/FormatBold';
 import FormatItalic from '@material-ui/icons/FormatItalic';
@@ -20,7 +21,7 @@ import FormatAlignLeft from '@material-ui/icons/FormatAlignLeft';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 
-const { styles, customStyleFn, exporter, convertToRaw } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
+const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
 const styleMap = {
   'STRIKETHROUGH': {
     textDecoration: 'line-through'
@@ -51,12 +52,21 @@ class Document extends React.Component {
       editorState: EditorState.createEmpty(),
       colorAnchorEl: null,
       fontAnchorEl: null,
+      socket: this.props.socket,
     }
     this.onChange = (editorState) => this.setState({editorState});
     this.setDomEditorRef = ref => this.domEditor = ref;
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
   }
 
+  componentDidMount(){
+    if (this.props.editorState){
+      var convertedEditorState = convertFromRaw(this.props.editorState);
+      this.setState({
+        editorState: convertedEditorState
+      })
+    }
+  }
 
   handleKeyCommand(command, editorState) {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -67,22 +77,10 @@ class Document extends React.Component {
     return 'not-handled';
   }
 
-  _onBoldClick(e) {
-    e.preventDefault()
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
-  }
-
-  _onItalicClick(e) {
-    e.preventDefault()
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'));
-  }
-
-  _OnStrikeClick() {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'STRIKETHROUGH'));
-  }
-
-  _OnUnderlineClick() {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'UNDERLINE'));
+  _toggleStyle(e){
+    e.preventDefault();
+    var newStyle = e.currentTarget.getAttribute('value');
+    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, newStyle));
   }
 
   _onRightAlignClick() {
@@ -133,11 +131,12 @@ class Document extends React.Component {
   }
 
   _onSaveClick(e){
-    alert("Not saved")
+    var rawJsonEditorState = convertToRaw(this.state.editorState.getCurrentContent()); //maybe EditorState.convertToRaw(this.state.editorState.getCurrentContent());
+    this.state.socket.emit('saveDocument', {documentId: this.props.document.documentId, editorState: rawJsonEditorState})
   }
 
   _onShareClick(e){
-    alert('Not shared')
+    this.state.socket.emit('shareDocument', {documentId: this.props.document.documentId}) //need to add a newUserId parameter to this emit
   }
 
   render(){
@@ -157,16 +156,16 @@ class Document extends React.Component {
           </Button>
         </div>
         <div className="toolbar">
-          <Button className="toolbar-btn" onClick={(e) => this._onBoldClick(e)}>
+          <Button value="BOLD" className="toolbar-btn" onClick={(e) => this._toggleStyle(e)}>
             <FormatBold />
           </Button>
-          <Button className="toolbar-btn" onClick={(e) => this._onItalicClick(e)}>
+          <Button value="ITALIC" className="toolbar-btn" onClick={(e) => this._toggleStyle(e)}>
             <FormatItalic />
           </Button>
-          <Button className="toolbar-btn" onClick={() => this._OnUnderlineClick()}>
+          <Button value="UNDERLINE" className="toolbar-btn" onClick={(e) => this._toggleStyle(e)}>
             <FormatUnderlined />
           </Button>
-          <Button className="toolbar-btn" onClick={() => this._OnStrikeClick()}>
+          <Button value="STRIKETHROUGH" className="toolbar-btn" onClick={(e) => this._toggleStyle(e)}>
             <FormatStrikethrough />
           </Button>
           <Button className="toolbar-btn" onClick={() => this._onLeftAlignClick()}>

@@ -12,7 +12,8 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       loggedIn: false,
-      socket:  io('http://localhost:1337')
+      socket:  io('http://localhost:1337'),
+      docChosen: null,
     };
     // this.onToggleLoggedIn = this.onToggleLoggedIn.bind(this);
     this.loginUser = this.loginUser.bind(this)
@@ -40,7 +41,6 @@ export default class App extends React.Component {
       this.setState(prevState => ({
       loggedIn: !prevState.loggedIn
     }));
-
       console.log("logged in?", this.state.loggedIn);
     })
     .catch(err => {
@@ -55,10 +55,11 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div className="container">
-       {this.state.loggedIn ?  <DocPortal socket={this.state.socket}/> :
-          <Login registerUser={this.registerUser} loginUser={this.loginUser}/> }
-          </div>
+      // <div className="container">
+      //  {this.state.loggedIn ?  <DocPortal socket={this.state.socket}/> :
+      //     <Login registerUser={this.registerUser} loginUser={this.loginUser}/> }
+      //     </div>
+      <Document socket={this.state.socket} document={this.state.docChosen} editorState={this.props.editorState}/>
     );
   }
 }

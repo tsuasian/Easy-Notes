@@ -103,7 +103,7 @@ io.on('connection', function(socket)  {
       //i.e. the actual contents
       var newDocumentContents = new DocumentContent({
         documentId: newDocument._id,
-        editorState:{}
+        editorState: {}
       })
       newDocument.save();
       newDocumentContents.save();
@@ -133,8 +133,27 @@ io.on('connection', function(socket)  {
 
   //LOAD DOCUMENT CONTENTS
   socket.on('loadDocumentContents', ({documentId}) => {
-    console.log("document id from socket", documentId);
+    console.log("document id from loadDOcumentContents", documentId);
     //grab documentcontents from documentcontent
+    DocumentContent.findOne({documentId:documentId})
+    .then( (docContent) => {
+      console.log('found document contents', docContent);
+      socket.emit('documentContentsLoaded', docContent);
+    })
+  })
+
+  socket.on('saveDocumentContents', ({documentId, newDocumentContent}) => {
+    console.log('document id from saveDocumentContents', documentId);
+    DocumentContent.findOne({documentId:documentId})
+    .then( (docContent) => {
+      docContent.editorState = newDocumentContent.editorState
+      docContent.save()
+
+    })
+    .catch(error => {
+      console.log('error from saveDocumentContents listener', error);
+    })
+
   })
 
 

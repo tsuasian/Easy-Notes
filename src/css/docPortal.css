@@ -36,12 +36,13 @@
 
 }
 
-#tableDocPort {
-  min-width: 700px;
+#newDocInput {
+  margin-bottom: 2px;
 }
 
-#newDocInput {
-  margin-bottom: 20px;
+#newDocumentName {
+  width: 208px;
+  text-align: center;
 }
 
 .addCollabButton {

@@ -48,7 +48,7 @@ export default class Login extends Component {
         <MuiThemeProvider theme={theme}>
           <AppBar position="static" color="primary">
             <Toolbar>
-              <Typography variant="title" color="white">
+              <Typography variant="title" color="textPrimary">
                 Login
               </Typography>
             </Toolbar>

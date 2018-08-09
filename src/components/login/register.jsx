@@ -49,7 +49,7 @@ export default class Register extends React.Component{
         <MuiThemeProvider theme={theme}>
         <AppBar position="static" color="primary">
           <Toolbar>
-            <Typography variant="title" color="white">
+            <Typography variant="title" color="textPrimary">
               Register
             </Typography>
           </Toolbar>

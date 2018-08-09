@@ -16,7 +16,12 @@ import TextField from '@material-ui/core/TextField';
 import theme from './theme/theme.js'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
-
+import Divider from '@material-ui/core/Divider';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Assignment from '@material-ui/icons/Assignment';
 
 class DocPortal extends React.Component {
   constructor(props) {
@@ -108,7 +113,7 @@ class DocPortal extends React.Component {
           </Toolbar>
         </AppBar>
       </div>
-
+      <Divider />
       {/* documents pulled from db */}
       <Paper>
         <Table>
@@ -120,13 +125,14 @@ class DocPortal extends React.Component {
           <TableBody>
             {this.state.documents.map((document) => {
                 return (
-                  <TableRow key={document._id}>
-                      <TableCell component="th" scope="row" key={document._id}>
-                        <Button value={document} onClick={(e)=>this.openDocument(e, document)}>
-                          {document.name}
-                        </Button>
-                      </TableCell>
-                  </TableRow>
+                  <List component="nav">
+                    <ListItem key={document._id} button={true} value={document} onClick={(e)=>this.openDocument(e, document)}>
+                      <ListItemIcon>
+                        <Assignment />
+                      </ListItemIcon>
+                      <ListItemText primary={document.name} />
+                    </ListItem>
+                  </List>
                 );
               })}
         </TableBody>

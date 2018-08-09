@@ -139,7 +139,7 @@ io.on('connection', function(socket)  {
     //grab documentcontents from documentcontent
     DocumentContent.findOne({documentId:documentId})
     .then( (docContent) => {
-      console.log('found document contents', docContent);
+      console.log('FOUND document contents', docContent);
       socket.emit('documentContentsLoaded', docContent);
     })
   })
@@ -159,8 +159,17 @@ io.on('connection', function(socket)  {
   })
 
   //SHARE DOCUMENT WITH ANOTHER USER
-  // socket.on('inviteUser', {documentId, username})
-  //
+  socket.on('inviteUser', ({documentId, username}) => {
+    //
+    User.findOne({username})
+    .then( (addedUser) => {
+      addedUser.documents.push(documentId);
+      addedUser.save()
+    })
+  });
+
+
+
 
 });
 

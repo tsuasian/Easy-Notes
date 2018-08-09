@@ -6,15 +6,17 @@ import Document from './components/textEditor/document';
 import DocPortal from './components/docPortal';
 import io from 'socket.io-client';
 import axios from 'axios';
-const dbUrl = 'http://localhost:1337';
+const dbUrl = 'http://56804821.ngrok.io';
 
 export default class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       loggedIn: false,
-      socket:  io('http://localhost:1337'),
-      docChosen: null,
+      socket:  io(dbUrl),
+      docSummary: null,
+      docContent: null,
+
     };
     this.loginUser = this.loginUser.bind(this)
   }
@@ -54,10 +56,26 @@ export default class App extends React.Component {
     })
   }
 
+  setSummary(docSummary){
+    console.log('in setSummary in app.jsx, docSummary: ', docSummary)
+    this.setState({
+      docSummary: docSummary,
+    })
+  }
+
+  setContents(docContent){
+    console.log('in setContents in app.jsx, docContent: ', docContent)
+    this.setState({
+      docContent: docContent,
+    })
+  }
+
   render() {
     return (
       this.state.loggedIn
-      ? <DocPortal socket={this.state.socket}/>
+      ? (this.state.docSummary && this.state.docContent)
+        ? <Document docSummary={this.state.docSummary} docContent={this.state.docContent}/>
+        : <DocPortal socket={this.state.socket} setSummary={this.setSummary.bind(this)} setContents={this.setContents.bind(this)}/>
       : <LogReg registerUser={this.registerUser} loginUser={this.loginUser}/>
     );
   }

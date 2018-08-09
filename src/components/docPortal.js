@@ -35,20 +35,17 @@ class DocPortal extends React.Component {
   componentDidMount() {
     //    SETUP USERS
     var self = this;
-    axios.get('http://localhost:1337/getUser').then(user => {
+    axios.get('http://56804821.ngrok.io/getUser').then(user => {
       self.setState({user: user.data})
     }).then(() => {
-      console.log(self.state)
       self.state.socket.on('documentCreated', (newDocument) => {
         var documents = self.state.documents.slice();
         //array of document objects
         documents.push(newDocument);
         self.setState({documents})
       })
-      // console.log("state user before emit", self.state.user.user)
       self.state.socket.emit('loadDocuments', self.state.user.user)
       self.state.socket.on('documentsLoaded', (newDocArr) => {
-        // console.log("received doc arr", newDocArr)
         self.setState({documents: newDocArr})
       });
     }).catch(e => {
@@ -60,19 +57,39 @@ class DocPortal extends React.Component {
     this.setState({newDocumentName: newName})
   }
 
-  createDocument() {
+  // setSummary(docSummary){
+  //   this.props.setSummary(docSummary);
+  // }
+  //
+  // setContents(docContent){
+  //   this.props.setContents(docContent);
+  // }
+
+  createDocument = () => {
     if (this.state.newDocumentName) {
-      console.log("emitting createDoc event");
+      //set docsummary and docContent
       var user = this.state.user.user;
       var name = this.state.newDocumentName
-      // console.log("document name", docname);
-      this.state.socket.emit('createDoc', {user, name})
-      this.setState({
-        newDocumentName: ''
+      this.state.socket.emit('createDoc', {user, name});
+      this.state.socket.on('documentCreated', (documentSummary, documentContents)=>{
+        this.props.setSummary(documentSummary);
+        this.props.setContents(documentContents);
       })
     } else {
       alert("Please give your document a name!")
     }
+  }
+
+  openDocument(e, doc){
+    var documentSummary = doc;
+    var docId = doc._id;
+    // console.log('documentSummary!!!', typeof documentSummary)
+    // console.log('docId!!!!: ', docId)
+    this.state.socket.emit('loadDocumentContents', {documentId: docId});
+    this.state.socket.on('documentContentsLoaded', (documentContent) => {
+      this.props.setSummary(documentSummary);
+      this.props.setContents(documentContent);
+    })
   }
 
   render() {
@@ -104,7 +121,11 @@ class DocPortal extends React.Component {
             {this.state.documents.map((document) => {
                 return (
                   <TableRow key={document._id}>
-                      <TableCell component="th" scope="row" key={document._id}><Button>{document.name}</Button></TableCell>
+                      <TableCell component="th" scope="row" key={document._id}>
+                        <Button value={document} onClick={(e)=>this.openDocument(e, document)}>
+                          {document.name}
+                        </Button>
+                      </TableCell>
                   </TableRow>
                 );
               })}
@@ -124,7 +145,7 @@ class DocPortal extends React.Component {
         </div>
         <div>
           <MuiThemeProvider>
-            <Button className="login-btn" onClick={this.createDocument}>
+            <Button className="login-btn" onClick={this.createDocument.bind(this)}>
               Save Document
             </Button>
           </MuiThemeProvider>

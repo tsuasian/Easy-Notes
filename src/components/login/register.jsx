@@ -60,9 +60,9 @@ export default class Register extends React.Component{
 
 
   render(){
-    usernameExists
-    ? usernameExistsErr();
-    : null
+    // usernameExists
+    // ? usernameExistsErr();
+    // : null
     return (
       <div className="box-container">
         <MuiThemeProvider theme={theme}>

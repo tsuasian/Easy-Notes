@@ -66,7 +66,6 @@ export default class Register extends React.Component{
     return (
       <div className="box-container">
         <MuiThemeProvider theme={theme}>
-        1
         <AppBar position="static" color="primary">
           <Toolbar>
             <Typography variant="title" color="textPrimary">
@@ -107,10 +106,12 @@ export default class Register extends React.Component{
                 placeholder="Retype Password"/>
             </div>
               <Button
+                className="btnStyleCustom"
                 onClick={this.onRegister}
                 >Register
               </Button>
               <Button
+                className="btnStyleCustom"
                 onClick={this.onSwitchMode.bind(this)}
                 >Click Here To Login
               </Button>

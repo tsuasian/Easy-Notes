@@ -160,13 +160,29 @@ io.on('connection', function(socket)  {
 
   //SHARE DOCUMENT WITH ANOTHER USER
   socket.on('inviteUser', ({documentId, username}) => {
-    //
+    //add document to user's document array
     User.findOne({username})
     .then( (addedUser) => {
       addedUser.documents.push(documentId);
       addedUser.save()
     })
+    //add user to document's collaborators array
+    Document.findOne({documentId})
+    .then( (document) => {
+      document.collaborators.push(username);
+      console.log("document's collaborators", document.collaborators);
+    })
+    .catch( (error) => {
+      console.log("error");
+    })
   });
+
+  // socket.on('removeUser', ({documentId, username}) => {
+  //
+  //
+  //
+  //
+  // })
 
 
 

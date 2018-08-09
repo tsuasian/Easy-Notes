@@ -82,13 +82,13 @@ export default class Login extends Component {
               </div>
                 <Button
                   type="Button"
-                  className="login-btn"
+                  className="login-btn btnStyleCustom"
                   onClick={this.onLogin}
                   >Login
                 </Button>
                 <Button
                   type="Button"
-                  className="login-btn"
+                  className="login-btn btnStyleCustom"
                   onClick={this.onSwitchMode.bind(this)}
                   >Go Back To Register
                 </Button>

@@ -26,6 +26,7 @@
 
 .navbar-container {
   margin-bottom: 66px;
+  flex-grow: 1
 }
 
 #docPaperPort {
@@ -41,4 +42,26 @@
 
 #newDocInput {
   margin-bottom: 20px;
+}
+
+.addCollabButton {
+  height: 1em;
+  width: 1em;
+  margin-top: 14px !important;
+  margin-right: 10px;
+}
+
+.addCollabDiv {
+  margin-right: 25px;
+}
+
+.renderDocsandButton {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.listDoc {
+  display: inline-block;
+  flex-grow: 1
 }

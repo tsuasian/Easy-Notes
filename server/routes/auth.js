@@ -17,17 +17,28 @@ export default function(passport){
 // });
 
 router.post('/signup', function(req, res){
-  new User({
-    username: req.body.username,
-    password: req.body.password
-  }).save()
-  .then(function(user){
-    console.log('SUCCESS', user);
-    res.send(user);
-  })
-  .catch(function(error){
-    console.log("ERROR", error);
-    res.send(error)
+  //check uniqueness
+  User.find({username: req.body.username})
+  .then( (uniqueuser) => {
+    if (uniqueuser) {
+      console.log('user already exists');
+      res.status(420).json({success: "name taken"})
+    } else {
+      //otherwise, save the result
+      new User({
+        username: req.body.username,
+        password: req.body.password
+      }).save()
+      .then(function(user){
+        console.log('SUCCESS', user);
+        res.send(user);
+      })
+      .catch(function(error){
+        console.log("ERROR", error);
+        res.send(error)
+      })
+
+    }
   })
 });
 

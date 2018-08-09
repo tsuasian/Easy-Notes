@@ -1,12 +1,39 @@
 import React from 'react';
 import axios from 'axios'
-import {AppBar, Tabs, Tab} from 'material-ui'
+import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import TextField from '@material-ui/core/TextField';
+
+
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+
+//theme in progress
+
+import { createMuiTheme } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#4fc3f7',
+    },
+    secondary: {
+      main: '#f8bbd0',
+    },
+    textPrimary: "#ffffff",
+    textSecondary: "#000000"
+  },
+  //mui button override
+});
 
 class DocPortal extends React.Component {
   constructor(props) {
@@ -67,10 +94,11 @@ class DocPortal extends React.Component {
 
   render() {
     return (<div className="container-docportal">
+      <MuiThemeProvider theme={theme}>
       <div className="navbar-container">
-        <AppBar position="static" color="default">
+        <AppBar postion="static" color="primary" className="appbarDoc">
           <Toolbar>
-            <Typography variant="title" color="inherit">
+            <Typography variant="title" color="textPrimary">
                 {
                   this.state.user
                     ? this.state.user.user.username + "'s documents"
@@ -82,13 +110,24 @@ class DocPortal extends React.Component {
       </div>
 
       {/* documents pulled from db */}
-      <div className="container-documents">
-        {
-          this.state.documents.map((document) => {
-            return <Button className="documents-rendered" key={document._id}>{document.name}</Button>
-          })
-        }
-      </div>
+      <Paper>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Document Names</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {this.state.documents.map((document) => {
+                return (
+                  <TableRow key={document._id}>
+                      <TableCell component="th" scope="row" key={document._id}>{document.name}</TableCell>
+                  </TableRow>
+                );
+              })}
+        </TableBody>
+        </Table>
+      </Paper>
 
       {/* add new document */}
       <div className="newDocDiv">
@@ -101,12 +140,14 @@ class DocPortal extends React.Component {
             placeholder="New Document Name"/>
         </div>
         <div>
-          <Button type="button" className="login-btn" onClick={this.createDocument}>
-            Save Document
-          </Button>
+          <MuiThemeProvider>
+            <Button className="login-btn" color="secondary" onClick={this.createDocument}>
+              Save Document
+            </Button>
+          </MuiThemeProvider>
         </div>
       </div>
-
+      </MuiThemeProvider>
     </div>);
   }
 }

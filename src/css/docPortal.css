@@ -38,3 +38,7 @@
 #tableDocPort {
   min-width: 700px;
 }
+
+#newDocInput {
+  margin-bottom: 20px;
+}

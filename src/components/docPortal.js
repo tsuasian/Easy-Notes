@@ -13,27 +13,10 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import TextField from '@material-ui/core/TextField';
-
-
+import theme from './theme/theme.js'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-
-//theme in progress
-
 import { createMuiTheme } from '@material-ui/core/styles';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#4fc3f7',
-    },
-    secondary: {
-      main: '#f8bbd0',
-    },
-    textPrimary: "#ffffff",
-    textSecondary: "#000000"
-  },
-  //mui button override
-});
 
 class DocPortal extends React.Component {
   constructor(props) {
@@ -121,7 +104,7 @@ class DocPortal extends React.Component {
             {this.state.documents.map((document) => {
                 return (
                   <TableRow key={document._id}>
-                      <TableCell component="th" scope="row" key={document._id}>{document.name}</TableCell>
+                      <TableCell component="th" scope="row" key={document._id}><Button>{document.name}</Button></TableCell>
                   </TableRow>
                 );
               })}
@@ -131,7 +114,7 @@ class DocPortal extends React.Component {
 
       {/* add new document */}
       <div className="newDocDiv">
-        <div id="test">
+        <div id="newDocInput">
           <TextField id="newDocumentName"
             onChange={(e) => this.setState({newDocumentName: e.target.value})}
             type="text" name="newDocumentName"
@@ -141,7 +124,7 @@ class DocPortal extends React.Component {
         </div>
         <div>
           <MuiThemeProvider>
-            <Button className="login-btn" color="secondary" onClick={this.createDocument}>
+            <Button className="login-btn" onClick={this.createDocument}>
               Save Document
             </Button>
           </MuiThemeProvider>

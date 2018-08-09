@@ -6,24 +6,10 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-
-//theme in progress
-
 import { createMuiTheme } from '@material-ui/core/styles';
+import theme from '../theme/theme.js'
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#4fc3f7',
-    },
-    secondary: {
-      main: '#f8bbd0',
-    }
-  },
-  //mui button override
-});
 
 
 export default class Login extends Component {
@@ -81,18 +67,16 @@ export default class Login extends Component {
                 value={this.state.password}
                 placeholder="Password"/>
                 <Button
-                  color="secondary"
                   type="Button"
                   className="login-btn"
                   onClick={this.onLogin}
                   >Login
                 </Button>
                 <Button
-                  color="secondary"
                   type="Button"
                   className="login-btn"
                   onClick={this.onSwitchMode.bind(this)}
-                  >Register
+                  >Go Back To Register
                 </Button>
             </Paper>
           </div>

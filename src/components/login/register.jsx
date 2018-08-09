@@ -6,25 +6,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-
-
+import theme from '../theme/theme.js'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-
-//theme in progress
-
 import { createMuiTheme } from '@material-ui/core/styles';
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#4fc3f7',
-    },
-    secondary: {
-      main: '#f8bbd0',
-    }
-  },
-  //mui button override
-});
 
 export default class Register extends React.Component{
   constructor(props) {
@@ -89,14 +73,12 @@ export default class Register extends React.Component{
                 value={this.state.password2}
                 placeholder="Retype Password"/>
               <Button
-                color="secondary"
                 onClick={this.onRegister}
                 >Register
               </Button>
               <Button
-                color="secondary"
                 onClick={this.onSwitchMode.bind(this)}
-                >Login
+                >Click Here To Login
               </Button>
           </Paper>
         </div>

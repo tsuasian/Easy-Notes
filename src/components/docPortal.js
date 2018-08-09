@@ -43,12 +43,6 @@ class DocPortal extends React.Component {
     }).catch(e => {
       console.log("error", e);
     })
-
-    //    FETCH OWNER'S DOCUMENTS
-    // for (var docId in )
-
-    //    DOCUMENT CREATED
-
   }
 
   onChange(newName) {

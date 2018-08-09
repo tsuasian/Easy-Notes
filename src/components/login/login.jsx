@@ -1,7 +1,15 @@
 import React, { Component } from 'react'
 
 export default class Login extends Component {
-  state = {mode: true}
+  constructor(props) {
+    super(props);
+    this.state={
+      mode: true,
+      usernmame: "",
+      password: "",
+      password2: "",
+    }
+  }
 
   onChange = (field) => (e) => this.setState({
     [field]: e.target.value

@@ -90,7 +90,12 @@ class DocPortal extends React.Component {
 
       {/* add new document */}
       <div>
-        <input id="newDocumentName" onChange={(e) => this.setState({newDocumentName: e.target.value})} type="text" name="newDocumentName" value={this.state.newDocumentName} className="login-input" placeholder="New Document Name"/>
+        <input id="newDocumentName"
+          onChange={(e) => this.setState({newDocumentName: e.target.value})}
+          type="text" name="newDocumentName"
+          value={this.state.newDocumentName}
+          className="login-input"
+          placeholder="New Document Name"/>
       </div>
       <div>
         <button type="button" className="login-btn" onClick={this.createDocument}>

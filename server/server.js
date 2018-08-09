@@ -159,8 +159,17 @@ io.on('connection', function(socket)  {
   })
 
   //SHARE DOCUMENT WITH ANOTHER USER
-  // socket.on('inviteUser', {documentId, username})
-  //
+  socket.on('inviteUser', ({documentId, username}) => {
+    //
+    User.findOne({username})
+    .then( (addedUser) => {
+      addedUser.documents.push(documentId);
+      addedUser.save()
+    })
+  });
+
+  
+
 
 });
 

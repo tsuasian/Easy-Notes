@@ -1,23 +1,9 @@
 import React, { Component } from 'react'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-
-
 
 export default class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state={
-      mode: true,
-      usernmame: "",
-      password: "",
-    }
-  }
+  state = {mode: true}
 
   onChange = (field) => (e) => this.setState({
     [field]: e.target.value
@@ -26,57 +12,141 @@ export default class Login extends Component {
     mode: !this.state.mode
   })
 
-  onSwitchMode(e){
-    this.props.switchMode();
-  }
-
   onLogin = () => {
     const {username, password} = this.state;
-    this.props.onLogin(username, password);
+    const {socket, navigate} = this.props;
+    this.props.loginUser(this.state.username, this.state.password);
 
     // socket.emit('login', {username, password}, (res) => {
     //   navigate(DocumentList)
     // })
 
   }
+  //  TODO: INVALID REGISTRATION FOR NON-UNIQUE USERNAMES
+  onRegister = () => {
+    const {username, password, password2, name} = this.state;
+    const {socket, navigate} = this.props;
+    console.log("username/pass", this.state.username, this.state.password);
+    this.props.registerUser(this.state.username, this.state.password, (response) => {
+      //set callback function to retrieve response promise from registerUser in parent class
+      if (response.data){
+        this.onToggleMode()
+        this.setState({
+          username: "",
+          password: ""
+        })
+      };
+    });
+    // TODO: if(password !== password2) return this.setState({validation:'Passwords not the same'})
+    // socket.emit('register', {username, password, name}, (res) => {
+    //   navigate(DocumentList)
+    // })
+  }
+
   render() {
-    return (
+    if(this.state.mode) {
+      return (
       <div className="box-container">
-        <AppBar position="static" color="default">
-          <Toolbar>
-            <Typography variant="title" color="inherit">
-              Login
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <div className="loginPageBody">
-          <Paper className="loginPaper" elevation={1}>
-            <TextField
+      <div className="inner-container">
+        <div className="header">
+          Login
+        </div>
+        <div className="box">
+          <div className="input-group">
+            <label htmlFor="username">Username</label>
+            <Text
+              onChange={this.onChange('username')}
+              value={this.state.username}
+              id="username"
+              type="text"
+              name="username"
+              className="login-input"
+              placeholder="Username"/>
+          </div>
+          <div className="input-group">
+            <label htmlFor="password">Password</label>
+            <Text
+              id="password"
+              onChange={this.onChange('password')}
+              type="password"
+              name="password"
+              value={this.state.password}
+              className="login-input"
+              placeholder="Password"/>
+          </div>
+
+          <Button
+            type="Button"
+            className="login-btn"
+            onClick={this.onLogin}
+            >Login
+          </Button>
+          <Button
+            type="Button"
+            className="login-btn"
+            onClick={this.onToggleMode}
+            >Register
+          </Button>
+        </div>
+      </div>
+      </div>
+    );
+    } else {
+      return (
+      <div className="box-container">
+      <div className="inner-container">
+        <div className="header">
+          Register
+        </div>
+        <div className="box">
+          <div className="input-group">
+            <label htmlFor="username">Username</label>
+            <Text
+              id="username"
               onChange={this.onChange('username')}
               value={this.state.username}
               type="text"
+              name="username"
+              className="login-input"
               placeholder="Username"/>
-
-            <TextField
+          </div>
+          <div className="input-group">
+            <label htmlFor="password">Password</label>
+            <Text
+              id="password"
               onChange={this.onChange('password')}
-              type="password"
               value={this.state.password}
+              type="password"
+              name="password"
+              className="login-input"
               placeholder="Password"/>
-              <Button
-                type="Button"
-                className="login-btn"
-                onClick={this.onLogin}
-                >Login
-              </Button>
-              <Button
-                type="Button"
-                className="login-btn"
-                onClick={this.onSwitchMode.bind(this)}
-                >Register
-              </Button>
-          </Paper>
+          </div>
+          <div className="input-group">
+            <label htmlFor="password2">Retype Password</label>
+            <Text
+              id="password2"
+              onChange={this.onChange('password2')}
+              value={this.state.password2}
+              type="password"
+              name="password"
+              className="login-input"
+              placeholder="Password"/>
+          </div>
+          <Button
+            type="Button"
+            className="login-btn"
+            onClick={this.onRegister}>Register
+          </Button>
+          <Button
+            type="Button"
+            className="login-btn"
+            onClick={this.onToggleMode}
+            >Cancel
+          </Button>
         </div>
       </div>
+      </div>
     );
+    }
   }
 }

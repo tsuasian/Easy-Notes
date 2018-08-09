@@ -1,10 +1,4 @@
 import http from 'http';
-const express = require('express');
-const bodyParser = require('body-parser')
-const path = require('path');
-const fs = require('fs');
-const mongoose = require('mongoose');
-const assert = require('assert');
 
 import cookieParser from 'cookie-parser';
 import session from 'express-session'
@@ -17,6 +11,13 @@ import User from './models/user'
 import Document from './models/document'
 import DocumentContent from './models/documentcontent'
 import apiRouter from './routes/api.js'
+const express = require('express');
+const bodyParser = require('body-parser')
+const path = require('path');
+const fs = require('fs');
+const mongoose = require('mongoose');
+const assert = require('assert');
+
 
 
 
@@ -32,6 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 //TODO: look over for repeats..
 console.log("mongo uri", process.env.MONGODB_URI);
@@ -67,7 +69,7 @@ mongoose.connection.on('error', function() {
 //   res.writeHead(200, {'Content-Type': 'text/plain'});
 //   res.end('Hello World\n');
 // }).listen(1337, '127.0.0.1');
-//
+
 // console.log('Server running at http://127.0.0.1:1337/');
 
 
@@ -103,15 +105,15 @@ io.on('connection', function(socket)  {
       //i.e. the actual contents
       var newDocumentContents = new DocumentContent({
         documentId: newDocument._id,
-        editorState: {}
+        editorState: null
       })
       newDocument.save();
       newDocumentContents.save();
       console.log("new doc", newDocument);
-      user.documents.push(newDocument);
+      user.documents.push (newDocument);
       user.save();
       console.log("new user with pushed document", user.documents);
-      socket.emit('documentCreated', newDocument)
+      socket.emit('documentCreated', newDocument, newDocumentContents);
     });
   })
 
@@ -131,9 +133,9 @@ io.on('connection', function(socket)  {
     }
   })
 
-  //LOAD DOCUMENT CONTENTS
+  //LOAD DOCUMENT CONTENTS (FROM MDB)
   socket.on('loadDocumentContents', ({documentId}) => {
-    console.log("document id from loadDOcumentContents", documentId);
+    console.log("document id from loadDocumentContents", documentId);
     //grab documentcontents from documentcontent
     DocumentContent.findOne({documentId:documentId})
     .then( (docContent) => {
@@ -142,21 +144,23 @@ io.on('connection', function(socket)  {
     })
   })
 
-  socket.on('saveDocumentContents', ({documentId, newDocumentContent}) => {
+  //SAVE DOCUMENT CONTENTS (TO MDB)
+  socket.on('saveDocumentContents', ({documentId, editorState}) => {
     console.log('document id from saveDocumentContents', documentId);
+    console.log('new editor state from saveDocumentContents', editorState);
     DocumentContent.findOne({documentId:documentId})
     .then( (docContent) => {
-      docContent.editorState = newDocumentContent.editorState
+      docContent.editorState = editorState
       docContent.save()
-
     })
     .catch(error => {
       console.log('error from saveDocumentContents listener', error);
     })
-
   })
 
-
+  //SHARE DOCUMENT WITH ANOTHER USER
+  // socket.on('inviteUser', {documentId, username})
+  //
 
 });
 
@@ -224,5 +228,4 @@ app.use(function(err, req, res, next) {
   // res.render('error');
 });
 
-// module.exports = app;
 export default app;

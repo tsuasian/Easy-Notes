@@ -9,9 +9,10 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-
 </head>
-<body style="overflow: hidden; background-color: rgba(0,0,0,0); margin: 0" >
+
+<!-- style="overflow: hidden; background-color: rgba(0,0,0,0); margin: 0"  -->
+<body style="overflow: hidden; margin: 0">
   <div id="App"></div>
 </body>
 
@@ -20,11 +21,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { createMuiTheme } from '@material-ui/core/styles';
+import theme from './components/theme/theme.js'
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 const render = () => {
   const App = require('./app').default;
   ReactDOM.render(
     <AppContainer>
-      <MuiThemeProvider>
+      <MuiThemeProvider theme={theme}>
         <App />
       </MuiThemeProvider>
     </AppContainer>, document.getElementById('App')

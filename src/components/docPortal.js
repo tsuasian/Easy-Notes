@@ -16,7 +16,8 @@ import TextField from '@material-ui/core/TextField';
 import theme from './theme/theme.js'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
-
+import AddIcon from '@material-ui/icons/Add';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 class DocPortal extends React.Component {
   constructor(props) {
@@ -95,6 +96,7 @@ class DocPortal extends React.Component {
   render() {
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
+      <CssBaseline />
       <div className="navbar-container">
         <AppBar postion="static" color="primary" className="appbarDoc">
           <Toolbar>
@@ -130,7 +132,7 @@ class DocPortal extends React.Component {
                 );
               })}
         </TableBody>
-        </Table>
+      </Table>
       </Paper>
 
       {/* add new document */}
@@ -144,11 +146,9 @@ class DocPortal extends React.Component {
             placeholder="New Document Name"/>
         </div>
         <div>
-          <MuiThemeProvider>
-            <Button className="login-btn" onClick={this.createDocument.bind(this)}>
-              Save Document
-            </Button>
-          </MuiThemeProvider>
+          <Button className="login-btn" onClick={this.createDocument.bind(this)}>
+            Save Document
+          </Button>
         </div>
       </div>
       </MuiThemeProvider>

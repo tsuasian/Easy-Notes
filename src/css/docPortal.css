@@ -1,7 +1,13 @@
 .container-documents {
-  border: 1px solid black;
+  display:flex;
+  flex-direction: column;
+  width: inherit;
 }
 
 .container-docportal {
-  
+  width: 100%;
+}
+
+.documents-rendered {
+
 }

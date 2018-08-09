@@ -55,7 +55,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div className="container">
+      <div className="container-yeet">
        {this.state.loggedIn ?  <DocPortal socket={this.state.socket}/> :
           <Login registerUser={this.registerUser} loginUser={this.loginUser}/> }
           </div>

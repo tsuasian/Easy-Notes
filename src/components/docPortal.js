@@ -2,6 +2,10 @@ import React from 'react';
 import axios from 'axios'
 import {AppBar, Tabs, Tab} from 'material-ui'
 import Button from '@material-ui/core/Button';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 class DocPortal extends React.Component {
   constructor(props) {
@@ -59,11 +63,9 @@ class DocPortal extends React.Component {
   }
 
   render() {
-    return (
-      <div className="container-docportal">
+    return (<div className="container-docportal">
       <div className="navbar-container">
-        <AppBar>
-
+        <AppBar position="static">
         </AppBar>
       </div>
       <div className="header">
@@ -78,14 +80,9 @@ class DocPortal extends React.Component {
       <div className="container-documents">
         {
           this.state.documents.map((document) => {
-            return <Button>{document.name}</Button>
+            return <Button className="documents-rendered" key={document._id}>{document.name}</Button>
           })
         }
-        <div>
-          <button type="button" className="login-btn">
-            Edit Document
-          </button>
-        </div>
       </div>
 
       {/* add new document */}
@@ -97,9 +94,7 @@ class DocPortal extends React.Component {
           Save Document
         </button>
       </div>
-
-    </div>
-    );
+    </div>);
   }
 }
 

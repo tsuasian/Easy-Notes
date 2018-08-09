@@ -24,6 +24,12 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Assignment from '@material-ui/icons/Assignment';
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
 
 class DocPortal extends React.Component {
   constructor(props) {
@@ -34,7 +40,8 @@ class DocPortal extends React.Component {
       socket: this.props.socket,
       //array of document objects
       documents: [],
-      newDocumentName: ""
+      newDocumentName: "",
+      openShare: false
     }
 
     this.createDocument = this.createDocument.bind(this);
@@ -99,8 +106,23 @@ class DocPortal extends React.Component {
     })
   }
 
-  render() {
+  handleCollaborators() {
+    this.setState({
+      openShare: true
+    })
+  }
 
+  handleClose() {
+    this.setState({
+      openShare: false
+    })
+  }
+
+  Transition(props) {
+    return <Slide direction="up" {...props} />;
+  }
+
+  render() {
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
       <div className="navbar-container">
@@ -141,9 +163,33 @@ class DocPortal extends React.Component {
                       </ListItem>
                     </List>
                     <div className="addCollabDiv">
-                      <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={() => alert('Hello!')}>
+                      <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={() => this.handleCollaborators()}>
                         <AddIcon />
                       </Button>
+                      <Dialog
+                        open={this.state.openShare}
+                        onClose={() => this.handleClose()}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                        >
+                        <DialogTitle id="alert-dialog-title">{"Share with Others"}</DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">
+                            Enter the Username of the collaborator you want to share with
+                          </DialogContentText>
+                          <TextField
+                            type="text" name="newDocumentName"
+                            label="Add Collaborator"
+                            className="tempyeet"
+                            placeholder="Enter Username"
+                          />
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={() => this.handleClose()} color="secondary" autoFocus>
+                            Done
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
                     </div>
                   </div>
                 );
@@ -159,7 +205,6 @@ class DocPortal extends React.Component {
             onChange={(e) => this.setState({newDocumentName: e.target.value})}
             type="text" name="newDocumentName"
             label="Create New Document"
-            inputProps={{textAlign: 'center'}}
             value={this.state.newDocumentName}
             className="login-input"
             placeholder="Enter New Document Name"/>

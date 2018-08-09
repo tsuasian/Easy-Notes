@@ -20,9 +20,9 @@ router.post('/signup', function(req, res){
   //check uniqueness
   User.find({username: req.body.username})
   .then( (uniqueuser) => {
-    if (uniqueuser) {
-      console.log('user already exists');
-      res.status(420).json({success: "name taken"})
+    if (uniqueuser.length !== 0) {
+      console.log('user already exists', uniqueuser);
+      res.status(420).json({error: "name taken"})
     } else {
       //otherwise, save the result
       new User({

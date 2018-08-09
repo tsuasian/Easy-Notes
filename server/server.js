@@ -167,7 +167,7 @@ io.on('connection', function(socket)  {
       addedUser.save()
     })
     //add user to document's collaborators array
-    Document.findOne({documentId})
+    Document.findById(documentId)
     .then( (document) => {
       document.collaborators.push(username);
       console.log("document's collaborators", document.collaborators);
@@ -177,12 +177,30 @@ io.on('connection', function(socket)  {
     })
   });
 
-  // socket.on('removeUser', ({documentId, username}) => {
-  //
-  //
-  //
-  //
-  // })
+  socket.on('removeUser', ({documentId, username}) => {
+    //remove document from user's document array
+    User.findOne({username})
+    .then( (removeuser) => {
+      //remove document from user's document list
+      let index = removeuser.documents.indexOf(documentId);
+      if (index > -1) {
+        removeuser.documents.splice(index, 1);
+        removeuser.save();
+      }
+    })
+    //remove user from document's collaborators array
+    Document.findById(documentId)
+    .then( (document) => {
+      let index = document.collaborators.indexOf(username);
+      if (index > -1) {
+        document.collaborators.splice(index, 1);
+        document.save();
+      }
+    })
+    .catch( (error) => {
+      console.log("error");
+    })
+  })
 
 
 

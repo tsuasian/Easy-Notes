@@ -16,6 +16,9 @@ const fontSizes = [ 12,18,22,30,40,60 ];
 class FontMenu extends React.Component {
   constructor(props){
     super(props);
+    this.state={
+      fontSelected: 12,
+    }
   }
 
   _setFontAnchorEl(e){
@@ -26,7 +29,14 @@ class FontMenu extends React.Component {
     this.props._handleMenuClose();
   }
 
-  _handleFontChange(e){
+  _handleFontChange = (e) => {
+    var currentFont = e.currentTarget.value;
+    console.log("currentFont", currentFont);
+    console.log("this.state",this);
+    this.setState({
+      fontSelected: currentFont
+    })
+    console.log("this.state after", this.state);
     this.props._handleFontChange(e);
     this.props._handleMenuClose();
   }
@@ -56,11 +66,12 @@ class FontMenu extends React.Component {
             horizontal: 'center',
           }}
         >
-          <Paper>
+          <Paper style={{maxHeight: 200, overflow: 'auto'}}>
             <ClickAwayListener onClickAway={(e)=>this._handleMenuClose(e)}>
               <MenuList>
                 {fontSizes.map( (font, index) =>
                   <MenuItem
+                    selected={this.state.fontSelected==font}
                     key={index}
                     value={font}
                     onClick={(e)=>this._handleFontChange(e)}>{font}</MenuItem>

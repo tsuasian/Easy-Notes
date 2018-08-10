@@ -66,12 +66,13 @@ export default class App extends React.Component {
   }
 
   logout = () => {
+    console.log('in app.js logout')
     axios.get(dbUrl+'/logout')
-    .then(function(response){
+    .then(
       this.setState({
-        loggedIn: false;
+        loggedIn: false,
       })
-    })
+    )
   }
 
   setSummary(docSummary){

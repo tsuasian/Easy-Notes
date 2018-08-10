@@ -83,7 +83,6 @@ class Document extends React.Component {
     //listen for doc change
     this.state.socket.on('newEditorState', (editorState) => {
       console.log("typeof editor State", typeof editorState)
-      console.log("editorState.editorState", editorState.editorState);
       var parsed = JSON.parse(editorState)
       let contentState = convertFromRaw(parsed)
       this.setState({

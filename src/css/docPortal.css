@@ -9,6 +9,7 @@
 
 .container-docportal {
   width: 100%;
+  overflow: auto;
 }
 
 .docTypoDiv {

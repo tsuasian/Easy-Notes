@@ -69,3 +69,7 @@
   display: inline;
   flex-grow: 2
 }
+
+.newdocButton {
+  margin-left: -6px;
+}

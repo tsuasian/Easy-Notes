@@ -51,7 +51,7 @@ class DocPortal extends React.Component {
   componentDidMount() {
     //    SETUP USERS
     var self = this;
-    axios.get('http://localhost:1337'+'/getUser').then(user => {
+    axios.get('http://122b3c92.ngrok.io'+'/getUser').then(user => {
       self.setState({user: user.data})
     }).then(() => {
       self.state.socket.on('documentCreated', (newDocument) => {

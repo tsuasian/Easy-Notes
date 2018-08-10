@@ -37,8 +37,9 @@
 
 }
 
-#newDocInput {
-  margin-bottom: 2px;
+.newDocInput {
+  margin: 10px;
+  padding: 10px;
 }
 
 #newDocumentName {

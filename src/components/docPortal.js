@@ -277,6 +277,7 @@ class DocPortal extends React.Component {
 
       {/* add new document */}
       <div className="newDocDiv">
+        <Paper className="newDocInput">
         <div id="newDocInput">
           <TextField id="newDocumentName"
             onChange={(e) => this.setState({newDocumentName: e.target.value})}
@@ -291,6 +292,7 @@ class DocPortal extends React.Component {
               Create New Document
             </Button>
         </div>
+        </Paper>
       </div>
       </MuiThemeProvider>
     </div>);

@@ -21,6 +21,18 @@ import FormatAlignLeft from '@material-ui/icons/FormatAlignLeft';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import Home from '@material-ui/icons/Home'
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import theme from '../theme/theme.js'
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
 
 const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
 const styleMap = {
@@ -55,7 +67,9 @@ class Document extends React.Component {
       colorAnchorEl: null,
       fontAnchorEl: null,
       socket: this.props.socket,
-      roomName: String(this.props.docSummary._id)
+      roomName: String(this.props.docSummary._id),
+      editTitle: false,
+      titleContent: ''
     }
     this.onChange = (editorState) => {
       this.emitChange(editorState);
@@ -179,6 +193,31 @@ class Document extends React.Component {
     this.props.docSummary();
   }
 
+  _onHandleTitle() {
+    this.setState({
+      editTitle: true
+    })
+  }
+  _onHandleTitleClose() {
+    this.setState({
+      editTitle: false
+    })
+  }
+
+  _onHandleTitleSubmit() {
+    this.setState({
+      editTitle: false
+    })
+    console.log("title", this.state.titleContent)
+    this.state.socket.emit('editTitle', ({id: this.props.docSummary._id, title: this.state.titleContent}))
+  }
+
+  handleOnChange(e) {
+    this.setState({
+      titleContent: e.target.value
+    })
+  }
+
   render(){
     const { colorAnchorEl } = this.state;
     const { fontAnchorEl } = this.state;
@@ -187,16 +226,52 @@ class Document extends React.Component {
     const fontOpen = Boolean(fontAnchorEl);
 
     return(
-      <div>
+      <div className="textEditorGrandma">
+        <MuiThemeProvider theme={theme}>
+        <CssBaseline />
         <div className="docshare-toolbar">
-          <Button className="toolbar-btn" onClick={this._onSaveClick.bind(this)}>
-            <SaveAlt />
-          </Button><Button className="toolbar-btn" onClick={(e) => this._onShareClick(e)}>
-            <CloudUpload />
-          </Button>
-          <Button className="toolbar-btn" onClick={()=>this.props.setNull()}>
-            <Home/>
-          </Button>
+          <AppBar postion="static" color="primary" className="appbarDoc">
+            <Toolbar>
+              <Typography variant="title" color="textPrimary" style={{flexGrow: 1}}>
+                <Button onClick={() => this._onHandleTitle()}>{this.props.docSummary.name}</Button>
+                <Dialog
+                  open={this.state.editTitle}
+                  onClose={() => this._onHandleTitleClose()}
+                  >
+                  <DialogTitle id="alert-dialog-title">{"Edit Title"}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Change The Title of Your Document
+                    </DialogContentText>
+                    <TextField
+                      type="text" name="newDocumentTitle"
+                      label="Change Title"
+                      className="tempyeet"
+                      placeholder="Enter New Title Here"
+                      fullWidth
+                      onChange={(e) => this.handleOnChange(e)}
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => this._onHandleTitleClose()} color="secondary">
+                      Cancel
+                    </Button>
+                    <Button onClick={() => this._onHandleTitleSubmit()} color="secondary">
+                      Submit
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </Typography>
+              <Button className="toolbar-btn" onClick={this._onSaveClick.bind(this)}>
+                <SaveAlt />
+              </Button><Button className="toolbar-btn" onClick={(e) => this._onShareClick(e)}>
+                <CloudUpload />
+              </Button>
+              <Button className="toolbar-btn" onClick={()=>this.props.setNull()}>
+                <Home/>
+              </Button>
+            </Toolbar>
+          </AppBar>
         </div>
         <div className="toolbar">
           <Button value="BOLD" className="toolbar-btn" onClick={(e) => this._toggleStyle(e)}>
@@ -238,6 +313,7 @@ class Document extends React.Component {
           >
           </ColorMenu>
         </div>
+        <Paper className="editorPaper">
         <div className="editor" onClick={() => this._HandleFocus()}>
           <Editor
             blockStyleFn={blockStyleFn}
@@ -249,6 +325,8 @@ class Document extends React.Component {
             customStyleMap={styleMap}
           />
         </div>
+        </Paper>
+        </MuiThemeProvider>
       </div>
     )
   }

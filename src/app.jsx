@@ -99,7 +99,7 @@ export default class App extends React.Component {
             socket={this.state.socket}
             setSummary={this.setSummary.bind(this)}
             setContents={this.setContents.bind(this)}
-            ogout={this.logout}
+            logout={this.logout}
           />
       : <LogReg
           registerUser={this.registerUser}

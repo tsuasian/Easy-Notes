@@ -31,6 +31,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
 const NGROK_URL = process.env.NGROK_URL;
 class DocPortal extends React.Component {
   constructor(props) {
@@ -161,6 +163,7 @@ class DocPortal extends React.Component {
   render() {
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
+      <CssBaseline />
       <div className="navbar-container">
         <AppBar postion="static" color="primary" className="appbarDoc">
           <Toolbar>
@@ -267,11 +270,9 @@ class DocPortal extends React.Component {
             placeholder="Enter New Document Name"/>
         </div>
         <div>
-          <MuiThemeProvider>
             <Button className="login-btn btnStyleCustom" onClick={this.createDocument.bind(this)}>
               Create New Document
             </Button>
-          </MuiThemeProvider>
         </div>
       </div>
       </MuiThemeProvider>

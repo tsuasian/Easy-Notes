@@ -23,11 +23,11 @@
   justify-content: center;
   flex-direction: column;
   padding: 10px;
-  margin-top: -16px;
+  margin-top: -10px;
 }
 
 .navbar-container {
-  margin-bottom: 55px;
+  margin-bottom: 56px;
   flex-grow: 1
 }
 
@@ -72,5 +72,5 @@
 }
 
 .newdocButton {
-  margin-left: -6px;
+  margin-left: 2px;
 }

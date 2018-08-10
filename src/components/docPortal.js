@@ -32,6 +32,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import CloudUpload from '@material-ui/icons/CloudUpload';
+import TagFaces from '@material-ui/icons/TagFaces';
 
 const NGROK_URL = process.env.NGROK_URL;
 class DocPortal extends React.Component {
@@ -194,6 +196,7 @@ class DocPortal extends React.Component {
             </Typography>
             <Button varient="fab" onClick={() => this._onOpenDoc()} className="logoutButton">
               <AddIcon />
+              <Assignment />
             </Button>
 
             <Dialog
@@ -203,7 +206,7 @@ class DocPortal extends React.Component {
               <DialogTitle id="alert-dialog-title">{"Add New Document"}</DialogTitle>
               <DialogContent>
                 <div className="newDocDiv">
-                  <Paper className="newDocInput">
+                  {/* <Paper className="newDocInput"> */}
                   <div>
                     <TextField id="newDocumentName"
                       onChange={(e) => this.setState({newDocumentName: e.target.value})}
@@ -218,7 +221,7 @@ class DocPortal extends React.Component {
                         Create New Document
                       </Button>
                   </div>
-                  </Paper>
+                  {/* </Paper> */}
                 </div>
               </DialogContent>
             </Dialog>
@@ -278,7 +281,8 @@ class DocPortal extends React.Component {
                           </ListItem>
                         <div className="addCollabDiv">
                           <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={(e) => this.handleCollaborators(e, document)}>
-                            <AddIcon />
+                            <AddIcon/>
+                            <TagFaces/>
                           </Button>
                         </div>
                       </div>

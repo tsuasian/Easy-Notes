@@ -162,14 +162,14 @@ class DocPortal extends React.Component {
       </div>
       <Divider />
       {/* documents pulled from db */}
-      <Paper>
+      <Paper style={{overflow:"auto", maxHeight: 500}}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell style={{fontSize: 14}} variant="head">Document Names</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody style={{overflow:"auto"}}>
             {this.state.documents.map((document) => {
                 return (
                   <div className="renderDocsandButton">

@@ -51,7 +51,7 @@ class Document extends React.Component {
     super(props);
     this.state = {
       editorState: EditorState.createEmpty(),
-      selectionState: EditorState.getSelection(),
+      // selectionState: EditorState.getSelection(),
       colorAnchorEl: null,
       fontAnchorEl: null,
       socket: this.props.socket,
@@ -59,7 +59,7 @@ class Document extends React.Component {
     }
     this.onChange = (editorState) => {
       this.emitChange(editorState);
-      this.emitSelect(editorState.getSelection())
+      // this.emitSelect(editorState.getSelection())
       this.setState({editorState})
     };
     this.setDomEditorRef = ref => this.domEditor = ref;
@@ -93,10 +93,10 @@ class Document extends React.Component {
     })
   }
   //tell everyone else what you're highlighting
-  emitSelect(selectionState) {
-    var rawJsonSelectionState = convertToRaw(selectionState());
-    this.state.socket.emit('docChange', {editorState: JSON.stringify(rawJsonEditorState), roomName:this.state.roomName})
-  }
+  // emitSelect(selectionState) {
+  //   var rawJsonSelectionState = convertToRaw(selectionState());
+  //   this.state.socket.emit('docChange', {editorState: JSON.stringify(rawJsonEditorState), roomName:this.state.roomName})
+  // }
 
   emitChange(editorState){
     //emit change

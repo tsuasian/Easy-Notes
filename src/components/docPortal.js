@@ -170,25 +170,30 @@ class DocPortal extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody style={{overflow:"auto"}}>
-            {this.state.documents.map((document) => {
-                return (
-                  <div className="renderDocsandButton">
-                    <List>
-                      <ListItem className="listDoc" key={document._id} button={true} value={document} onClick={(e)=>this.openDocument(e, document)}>
-                        <ListItemIcon>
-                          <Assignment />
-                        </ListItemIcon>
-                        <ListItemText key={document._id} primary={document.name} />
-                      </ListItem>
-                    </List>
-                    <div className="addCollabDiv">
-                      <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={(e) => this.handleCollaborators(e, document)}>
-                        <AddIcon />
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
+            <TableRow>
+              <TableCell>
+                <List>
+                {this.state.documents.map((document) => {
+                    return (
+                      <div key={document._id} className="renderDocsandButton">
+                          <ListItem className="listDoc" key={document._id} button={true} value={document} onClick={(e)=>this.openDocument(e, document)}>
+                            <ListItemIcon>
+                              <Assignment />
+                            </ListItemIcon>
+                            <ListItemText key={document._id} primary={document.name} />
+                          </ListItem>
+                        <div className="addCollabDiv">
+                          <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={(e) => this.handleCollaborators(e, document)}>
+                            <AddIcon />
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </List>
+              </TableCell>
+            </TableRow>
+
               <Dialog
                 open={this.state.openShare}
                 onClose={() => this.handleClose()}

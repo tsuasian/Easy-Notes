@@ -90,7 +90,7 @@ export default class Login extends Component {
                   type="Button"
                   className="login-btn btnStyleCustom"
                   onClick={this.onSwitchMode.bind(this)}
-                  >Go Back To Register
+                  >Go Back to Login
                 </Button>
             </Paper>
           </div>

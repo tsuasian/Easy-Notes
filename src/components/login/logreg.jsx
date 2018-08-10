@@ -13,7 +13,7 @@ export default class LogReg extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      mode: 'register',
+      mode: 'login',
     }
   }
 

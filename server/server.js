@@ -18,14 +18,12 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const assert = require('assert');
 
-
-
-
 //sockets
 const app = express();
 const server= require('http').Server(app);
 const io = require('socket.io')(server);
 
+//initialize app
 app.use('/', apiRouter);
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
@@ -34,9 +32,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-//TODO: look over for repeats..
 console.log("mongo uri", process.env.MONGODB_URI);
+
 
 //  ********************* ****  //
 // ***  MONGODB CONNECTION ***  //
@@ -51,47 +48,28 @@ if (! process.env.MONGODB_URI) {
 import authRouter from './routes/auth.js'
 // const dbRoutes = require('./routes/auth.js');
 
-
-
 mongoose.connect(process.env.MONGODB_URI);
-
 mongoose.connection.on('connected', function() {
   console.log('Success: connected to MongoDb!');
 });
-
 mongoose.connection.on('error', function() {
   console.log('Error connecting to MongoDb. Check MONGODB_URI in env.sh');
   process.exit(1);
 });
 
-// //create server, listen on port 1337
-// http.createServer((req, res) => {
-//   res.writeHead(200, {'Content-Type': 'text/plain'});
-//   res.end('Hello World\n');
-// }).listen(1337, '127.0.0.1');
-
-// console.log('Server running at http://127.0.0.1:1337/');
-
 
 //  ***************************  //
 // ***  SOCKET IO ROUTES    ***  //
 //  ***************************  //
+
 server.listen(1337, ()=> {
   console.log('Server for React Todo App listening on port 1337!')
 });
 
 io.on('connection', function(socket)  {
   console.log('connected to socket');
-  socket.emit('msg', {hello: 'world'});
-  socket.on('cmd', function(data) {
-    console.log(data);
-  });
-  socket.on('sayHi', (data) => {
-    console.log("in socket");
-    console.log(data.hi);
-  })
-
-  //CREATE DOC
+  //on event create doc, create new document and documentContents model
+  //and save to mongodb
   socket.on('createDoc', ({user, name}) => {
     console.log('got to createDoc socket on server');
     User.findById(user._id).then(user => {
@@ -152,11 +130,12 @@ io.on('connection', function(socket)  {
 
   //listen for a change in editor state
   socket.on('docChange' , ({editorState, roomName}) =>{
-    console.log("editorState from docchange", editorState);
     console.log("roomName from docChange", roomName);
+    console.log("editorsstate", editorState);
     //reply back to all other sockets in room
     socket.broadcast.to(roomName).emit('newEditorState', {editorState});
-  })
+
+    })
 
 
   //now listen for emit message event

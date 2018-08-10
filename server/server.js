@@ -218,6 +218,18 @@ io.on('connection', function(socket)  {
     })
   })
 
+  //edit title
+  socket.on('editTitle', ({documentId, newTitle}) => {
+    Document.findById(docuentId)
+    .then( (document)  => {
+      document.name = newTitle;
+      document.save()
+      console.log("updated document.name to ", document.name);
+    })
+  })
+
+  
+
 
 
 

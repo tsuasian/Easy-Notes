@@ -17,37 +17,24 @@ export default class App extends React.Component {
       socket:  io(dbUrl),
       docSummary: null,
       docContent: null,
-      usernameExists: false,
+      // usernameExists: false,
     };
     this.loginUser = this.loginUser.bind(this)
   }
 
-////****************************************************
-////****************************************************
-////****************************************************
-  //  TODO: INVALID REGISTRATION FOR NON-UNIQUE USERNAMES
-  //  TODO: Handle invalid login credentials
-////****************************************************
-////****************************************************
-////****************************************************
-
-  registerUser = (username, password) => {  //got rid of cb here... what was it for? @sean
-
-    console.log(this.state)
-
-
+  registerUser = (username, password, next) => {
     axios.post(dbUrl + '/signup', {username: username, password: password})
     .then(function(response) {
-      console.log("(success) response register", response);
+      if (typeof response.data == "string"){
+        console.log('In app.js: Throwing error: ', response.data)
+        next(response.data);
+      } else{
+        console.log("(success) response register", response);
+        next(null, response);
+      }
     })
     .catch( (error) => {
-      console.log("(error registering)", error);
-      // console.log('error response: ', response)
-      // cb(null);
-      console.log('User Already Exists')
-      this.setState({
-        usernameExists: true,
-      })
+      console.log("error in register request (in app.jsx)", error);
     })
   }
 
@@ -98,16 +85,7 @@ export default class App extends React.Component {
     });
   }
 
-  resetUsernameExists = () =>{
-    this.setState({
-      usernameExists: false,
-    })
-  }
-
-
   render() {
-
-    console.log(this.state.usernameExists);
     return (
       this.state.loggedIn
       ? (this.state.docSummary && this.state.docContent)
@@ -121,13 +99,11 @@ export default class App extends React.Component {
             socket={this.state.socket}
             setSummary={this.setSummary.bind(this)}
             setContents={this.setContents.bind(this)}
-            ogout={this.logout}
+            logout={this.logout}
           />
       : <LogReg
           registerUser={this.registerUser}
           loginUser={this.loginUser}
-          usernameExists={this.state.usernameExists}
-          resetUsernameExists={this.resetUsernameExists}
         />
     );
   }

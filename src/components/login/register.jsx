@@ -6,6 +6,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 import theme from '../theme/theme.js'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -23,7 +29,7 @@ export default class Register extends React.Component{
       username: "",
       password: "",
       password2: "",
-      usernameExists: this.props.usernameExists,
+      invalidRegistration: false,
     }
   }
 
@@ -32,6 +38,7 @@ export default class Register extends React.Component{
   })
 
   onRegister = () => {
+    var self = this;
     const {username, password, password2} = this.state;
     if (password!==password2){
       alert("Passwords must match");
@@ -40,7 +47,21 @@ export default class Register extends React.Component{
         password2: "",
       });
     } else{
-      this.props.onRegister(username, password);
+      this.props.onRegister(username, password,  (err) => {
+        if (err=="username taken"){
+          console.log('found errror in register.jsx: ', err)
+          self.setState({
+            invalidRegistration: "Username has been taken",
+          });
+        } else if (err=="empty username"){
+          self.setState({
+            invalidRegistration: "You must provide a username",
+          });
+        }
+        else{
+          this.onSwitchMode();
+        }
+      });
     }
   }
 
@@ -48,24 +69,32 @@ export default class Register extends React.Component{
     this.props.switchMode();
   }
 
-  usernameExistsErr(){
+  handleClose = () => {
     this.setState({
-      username: "",
-      password: "",
-      password2: "",
-    });
-    alert('Username already exists');
-    this.props.resetUsernameExists()
+      invalidRegistration: false,
+    })
   }
 
 
   render(){
-    console.log('register.jsx usernameExists', this.props.usernameExists)
-    if(this.props.usernameExists){
-      this.usernameExistsErr();
-    }
     return (
       <div className="box-container">
+        <Dialog
+          open={Boolean(this.state.invalidRegistration)}
+          onClose={this.handleClose}
+          >
+          <DialogTitle id="invalid-registration">{"Registration Error"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="invalidRegistration">
+              {this.state.invalidRegistration}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => this.handleClose()} color="secondary" autoFocus>
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
         <MuiThemeProvider theme={theme}>
           <CssBaseline />
         <AppBar position="static" color="primary">

@@ -150,13 +150,12 @@ class DocPortal extends React.Component {
       openUser: true
     })
     console.log('in logout in docPortal')
-    // this.props.logout();
   }
 
   _onCloseUser() {
     this.setState({
       openUser: false
-    })
+    });
     this.props.logout()
   }
 
@@ -194,7 +193,7 @@ class DocPortal extends React.Component {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => this._onCloseDialog()} color="secondary" autoFocus>
+                <Button onClick={() => this._onCloseDialog()} color="secondary">
                   Cancel
                 </Button>
                 <Button onClick={() => this._onCloseUser()} color="secondary">
@@ -278,7 +277,8 @@ class DocPortal extends React.Component {
 
       {/* add new document */}
       <div className="newDocDiv">
-        <div id="newDocInput">
+        <Paper className="newDocInput">
+        <div>
           <TextField id="newDocumentName"
             onChange={(e) => this.setState({newDocumentName: e.target.value})}
             type="text" name="newDocumentName"
@@ -287,11 +287,12 @@ class DocPortal extends React.Component {
             className="login-input"
             placeholder="Enter New Document Name"/>
         </div>
-        <div>
+        <div className="newdocButton">
             <Button className="login-btn btnStyleCustom" onClick={this.createDocument.bind(this)}>
               Create New Document
             </Button>
         </div>
+        </Paper>
       </div>
       </MuiThemeProvider>
     </div>);

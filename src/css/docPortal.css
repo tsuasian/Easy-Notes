@@ -63,6 +63,7 @@
 }
 
 .listDoc {
-  display: inline-block;
-  flex-grow: 1
+  border: 1px solid black;
+  display: inline;
+  flex-grow: 2
 }

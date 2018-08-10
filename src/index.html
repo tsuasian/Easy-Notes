@@ -11,8 +11,8 @@
 
 </head>
 
-<!-- style="overflow: hidden; background-color: rgba(0,0,0,0); margin: 0"  -->
-<body style="overflow: hidden; margin: 0">
+<!-- style="overflow: hidden; background-color: rgba(0,0,0,0); margin: 0" -->
+<body style="overflow: hidden; background-color: rgba(0,0,0,0); margin: 0">
   <div id="App"></div>
 </body>
 
@@ -28,9 +28,7 @@ const render = () => {
   const App = require('./app').default;
   ReactDOM.render(
     <AppContainer>
-      <MuiThemeProvider theme={theme}>
         <App />
-      </MuiThemeProvider>
     </AppContainer>, document.getElementById('App')
     );
 }

@@ -13,9 +13,6 @@ const theme = createMuiTheme({
       light: '#f6a5c0',
       main: '#f48fb1',
       dark: '#aa647b'
-    },
-    background: {
-      default: '#FFFFFF'
     }
   },
   overrides: {
@@ -38,8 +35,6 @@ const theme = createMuiTheme({
       colorTextSecondary: {
         color: "#000000",
       }
-    },
-    MuiAppBar: {
     }
   },
   typography: {

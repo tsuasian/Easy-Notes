@@ -49,7 +49,7 @@ class DocPortal extends React.Component {
   componentDidMount() {
     //    SETUP USERS
     var self = this;
-    axios.get(NGROK_URL+'/getUser').then(user => {
+    axios.get('http://localhost:1337'+'/getUser').then(user => {
       self.setState({user: user.data})
     }).then(() => {
       self.state.socket.on('documentCreated', (newDocument) => {
@@ -106,7 +106,7 @@ class DocPortal extends React.Component {
     })
   }
 
-  handleCollaborators() {
+  handleCollaborators(e, doc) {
     this.setState({
       openShare: true
     })
@@ -163,37 +163,36 @@ class DocPortal extends React.Component {
                       </ListItem>
                     </List>
                     <div className="addCollabDiv">
-                      <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={() => this.handleCollaborators()}>
+                      <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={(e) => this.handleCollaborators(e, document)}>
                         <AddIcon />
                       </Button>
-                      <Dialog
-                        open={this.state.openShare}
-                        onClose={() => this.handleClose()}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                        >
-                        <DialogTitle id="alert-dialog-title">{"Share with Others"}</DialogTitle>
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-description">
-                            Enter the Username of the collaborator you want to share with
-                          </DialogContentText>
-                          <TextField
-                            type="text" name="newDocumentName"
-                            label="Add Collaborator"
-                            className="tempyeet"
-                            placeholder="Enter Username"
-                          />
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={() => this.handleClose()} color="secondary" autoFocus>
-                            Done
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
                     </div>
                   </div>
                 );
               })}
+              <Dialog
+                open={this.state.openShare}
+                onClose={() => this.handleClose()}
+                >
+                <DialogTitle id="alert-dialog-title">{"Share with Others"}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Enter the Username of the collaborator you want to share with
+                  </DialogContentText>
+                  <TextField
+                    type="text" name="newDocumentName"
+                    label="Add Collaborator"
+                    className="tempyeet"
+                    placeholder="Enter Username"
+                    fullWidth
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => this.handleClose()} color="secondary" autoFocus>
+                    Done
+                  </Button>
+                </DialogActions>
+              </Dialog>
         </TableBody>
         </Table>
       </Paper>

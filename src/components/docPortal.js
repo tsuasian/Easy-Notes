@@ -47,7 +47,8 @@ class DocPortal extends React.Component {
       openShare: false,
       shareUsername: '',
       currentShareDocID: '',
-      openUser: false
+      openUser: false,
+      openNewDoc: false,
     }
 
     this.createDocument = this.createDocument.bind(this);
@@ -165,6 +166,18 @@ class DocPortal extends React.Component {
     })
   }
 
+  _onCloseDoc() {
+    this.setState({
+      openNewDoc: false
+    })
+  }
+
+  _onOpenDoc() {
+    this.setState({
+      openNewDoc: true
+    })
+  }
+
   render() {
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
@@ -179,6 +192,37 @@ class DocPortal extends React.Component {
                     : 'loading'
                 }
             </Typography>
+            <Button varient="fab" onClick={() => this._onOpenDoc()} className="logoutButton">
+              <AddIcon />
+            </Button>
+
+            <Dialog
+              open={this.state.openNewDoc}
+              onClose={() => this._onCloseDoc()}
+              >
+              <DialogTitle id="alert-dialog-title">{"Add New Document"}</DialogTitle>
+              <DialogContent>
+                <div className="newDocDiv">
+                  <Paper className="newDocInput">
+                  <div>
+                    <TextField id="newDocumentName"
+                      onChange={(e) => this.setState({newDocumentName: e.target.value})}
+                      type="text" name="newDocumentName"
+                      label="Create New Document"
+                      value={this.state.newDocumentName}
+                      className="login-input"
+                      placeholder="Enter New Document Name"/>
+                  </div>
+                  <div className="newdocButton">
+                      <Button className="login-btn btnStyleCustom" onClick={this.createDocument.bind(this)}>
+                        Create New Document
+                      </Button>
+                  </div>
+                  </Paper>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <Button varient="fab" onClick={this._onLogout} className="logoutButton">
               <AccountCircle />
             </Button>
@@ -206,7 +250,7 @@ class DocPortal extends React.Component {
       </div>
       <Divider />
       {/* documents pulled from db */}
-      <Paper style={{overflow:"auto", maxHeight: 500}}>
+      <Paper style={{overflow:"auto", maxHeight: 700}}>
         <Table>
           <TableHead>
             <TableRow>
@@ -276,7 +320,7 @@ class DocPortal extends React.Component {
       </Paper>
 
       {/* add new document */}
-      <div className="newDocDiv">
+      {/* <div className="newDocDiv">
         <Paper className="newDocInput">
         <div>
           <TextField id="newDocumentName"
@@ -293,7 +337,7 @@ class DocPortal extends React.Component {
             </Button>
         </div>
         </Paper>
-      </div>
+      </div> */}
       </MuiThemeProvider>
     </div>);
   }

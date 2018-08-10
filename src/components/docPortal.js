@@ -44,7 +44,8 @@ class DocPortal extends React.Component {
       newDocumentName: "",
       openShare: false,
       shareUsername: '',
-      currentShareDocID: ''
+      currentShareDocID: '',
+      openUser: false
     }
 
     this.createDocument = this.createDocument.bind(this);
@@ -137,8 +138,24 @@ class DocPortal extends React.Component {
   }
 
   _onLogout = () => {
+    this.setState({
+      openUser: true
+    })
     console.log('in logout in docPortal')
-    this.props.logout();
+    // this.props.logout();
+  }
+
+  _onCloseUser() {
+    this.setState({
+      openUser: false
+    })
+    this.props.logout()
+  }
+
+  _onCloseDialog() {
+    this.setState({
+      openUser: false
+    })
   }
 
   render() {
@@ -154,9 +171,25 @@ class DocPortal extends React.Component {
                     : 'loading'
                 }
             </Typography>
-            <Button varient="fab" onClick={this._onLogout} className="searchButton">
+            <Button varient="fab" onClick={this._onLogout} className="logoutButton">
               <AccountCircle />
             </Button>
+            <Dialog
+              open={this.state.openUser}
+              onClose={() => this._onCloseDialog()}
+              >
+              <DialogTitle id="alert-dialog-title">{"User Settings"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Are you sure you want to Logout?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => this._onCloseUser()} color="secondary">
+                  Logout
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Toolbar>
         </AppBar>
       </div>

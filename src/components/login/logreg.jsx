@@ -13,7 +13,7 @@ export default class LogReg extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      mode: 'register',
+      mode: 'login',
     }
   }
 
@@ -36,8 +36,16 @@ export default class LogReg extends React.Component{
     // console.log();
     return(
       (this.state.mode=='register' || this.props.usernameExists)
-      ? <Register switchMode={this.switchMode.bind(this)} onRegister={this.onRegister} usernameExists={this.props.usernameExists} resetUsernameExists={this.props.resetUsernameExists}/>
-      : <Login switchMode={this.switchMode.bind(this)} onLogin={this.onLogin}/>
+      ? <Register
+          switchMode={this.switchMode.bind(this)}
+          onRegister={this.onRegister}
+          usernameExists={this.props.usernameExists}
+          resetUsernameExists={this.props.resetUsernameExists}
+        />
+      : <Login
+          switchMode={this.switchMode.bind(this)}
+          onLogin={this.onLogin}
+        />
     )
   }
 }

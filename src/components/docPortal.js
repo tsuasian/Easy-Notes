@@ -212,7 +212,13 @@ class DocPortal extends React.Component {
                 {this.state.documents.map((document) => {
                     return (
                       <div key={document._id} className="renderDocsandButton">
-                          <ListItem className="listDoc" key={document._id} button={true} value={document} onClick={(e)=>this.openDocument(e, document)}>
+                          <ListItem
+                              className="listDoc"
+                              key={document._id}
+                              button={true}
+                              value={document}
+                              onClick={(e)=>this.openDocument(e, document)}
+                            >
                             <ListItemIcon>
                               <Assignment />
                             </ListItemIcon>

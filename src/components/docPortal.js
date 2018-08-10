@@ -129,6 +129,12 @@ class DocPortal extends React.Component {
     this.state.socket.emit('inviteUser', {documentId: this.state.currentShareDocID, username: this.state.shareUsername})
   }
 
+  handleJustClose() {
+    this.setState({
+      openShare: false
+    })
+  }
+
   handleOnChange(e) {
     this.setState({
       shareUsername: e.target.value
@@ -188,6 +194,9 @@ class DocPortal extends React.Component {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
+                <Button onClick={() => this._onCloseDialog()} color="secondary" autoFocus>
+                  Cancel
+                </Button>
                 <Button onClick={() => this._onCloseUser()} color="secondary">
                   Logout
                 </Button>
@@ -238,7 +247,7 @@ class DocPortal extends React.Component {
 
               <Dialog
                 open={this.state.openShare}
-                onClose={() => this.handleClose()}
+                onClose={() => this.handleJustClose()}
                 >
                 <DialogTitle id="alert-dialog-title">{"Share with Others"}</DialogTitle>
                 <DialogContent>
@@ -255,6 +264,9 @@ class DocPortal extends React.Component {
                   />
                 </DialogContent>
                 <DialogActions>
+                  <Button onClick={() => this.handleJustClose()} color="secondary" autoFocus>
+                    Cancel
+                  </Button>
                   <Button onClick={() => this.handleClose()} color="secondary" autoFocus>
                     Done
                   </Button>

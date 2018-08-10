@@ -132,8 +132,9 @@ io.on('connection', function(socket)  {
   socket.on('docChange' , ({editorState, roomName}) =>{
     console.log("roomName from docChange", roomName);
     console.log("editorsstate", editorState);
+    console.log('type of editorstate', typeof(editorState));
     //reply back to all other sockets in room
-    socket.broadcast.to(roomName).emit('newEditorState', {editorState});
+    socket.broadcast.to(roomName).emit('newEditorState', editorState);
 
     })
 

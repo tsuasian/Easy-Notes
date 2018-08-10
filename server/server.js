@@ -144,14 +144,22 @@ io.on('connection', function(socket)  {
     })
 
     //now, lets create a socket room
-    //convert mongoSchema_id object to a string
-    // let roomName = String(documentId);
-    // socket.join(roomName);
-    // console.log('user joined room ', roomName);
-
-
+    // convert mongoSchema_id object to a string
+    let roomName = String(documentId);
+    socket.join(roomName);
+    console.log('user joined room ', roomName);
   })
 
+  //listen for a change in editor state
+  socket.on('docChange' , ({editorState, roomName}) =>{
+    console.log("editorState from docchange", editorState);
+    console.log("roomName from docChange", roomName);
+    //reply back to all other sockets in room
+    socket.broadcast.to(roomName).emit('newEditorState', {editorState});
+  })
+
+
+  //now listen for emit message event
   //SAVE DOCUMENT CONTENTS (TO MDB)
   socket.on('saveDocumentContents', ({documentId, editorState}) => {
     console.log('document id from saveDocumentContents', documentId);

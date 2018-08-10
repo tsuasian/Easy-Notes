@@ -57,7 +57,7 @@ class Document extends React.Component {
       roomName: String(this.props.docSummary._id)
     }
     this.onChange = (editorState) => {
-      // this.emitChange(editorState);
+      this.emitChange(editorState);
       this.setState({editorState})
     };
     this.setDomEditorRef = ref => this.domEditor = ref;
@@ -80,20 +80,20 @@ class Document extends React.Component {
     // this.state.socket.join(this.state.roomName);
     // console.log('joined room ', this.state.roomName);
 
-    //listen for do change
-    // this.state.socket.on('docChange', (editorState) => {
-    //   var convertedEditorState = convertFromRaw(JSON.parse(editorState));
-    //   this.setState({
-    //       editorState: EditorState.createWithContent(convertedEditorState)
-    //   });
-    // })
+    //listen for doc change
+    this.state.socket.on('newEditorState', (editorState) => {
+      var convertedEditorState = convertFromRaw(JSON.parse(editorState));
+      this.setState({
+          editorState: EditorState.createWithContent(convertedEditorState)
+      });
+    })
   }
   //
-  // emitChange(editorState){
-  //   //emit change
-  //   var rawJsonEditorState = convertToRaw(editorState.getCurrentContent());
-  //   this.state.socket.to(this.state.roomName).broadcast.emit('docChange', {editorState: JSON.stringify(rawJsonEditorState)})
-  // }
+  emitChange(editorState){
+    //emit change
+    var rawJsonEditorState = convertToRaw(editorState.getCurrentContent());
+    this.state.socket.emit('docChange', {editorState: JSON.stringify(rawJsonEditorState), roomName:this.state.roomName})
+  }
 
   handleKeyCommand(command, editorState) {
     const newState = RichUtils.handleKeyCommand(editorState, command);

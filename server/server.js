@@ -142,6 +142,14 @@ io.on('connection', function(socket)  {
       console.log('FOUND document contents', docContent);
       socket.emit('documentContentsLoaded', docContent);
     })
+
+    //now, lets create a socket room
+    //convert mongoSchema_id object to a string
+    // let roomName = String(documentId);
+    // socket.join(roomName);
+    // console.log('user joined room ', roomName);
+
+
   })
 
   //SAVE DOCUMENT CONTENTS (TO MDB)

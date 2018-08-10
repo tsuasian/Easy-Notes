@@ -21,6 +21,7 @@ import FormatAlignLeft from '@material-ui/icons/FormatAlignLeft';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import Home from '@material-ui/icons/Home'
+
 const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
 const styleMap = {
   'STRIKETHROUGH': {
@@ -53,8 +54,12 @@ class Document extends React.Component {
       colorAnchorEl: null,
       fontAnchorEl: null,
       socket: this.props.socket,
+      roomName: String(this.props.docSummary._id)
     }
-    this.onChange = (editorState) => this.setState({editorState});
+    this.onChange = (editorState) => {
+      this.emitChange(editorState);
+      this.setState({editorState})
+    };
     this.setDomEditorRef = ref => this.domEditor = ref;
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
   }
@@ -64,14 +69,30 @@ class Document extends React.Component {
     if (this.props.docContent.editorState === null){
       null;
     } else{
-      console.log('in else in component did mount, editor state: ', this.props.docContent.editorState)
       var convertedEditorState = convertFromRaw(JSON.parse(this.props.docContent.editorState));
-      console.log('converted back to editor state: ', convertedEditorState);
       this.setState({
           editorState: EditorState.createWithContent(convertedEditorState)
       });
-      console.log('after setState')
     }
+
+    //join document room, docInfo in this.props.docSummary
+    socket.join(this.state.roomName);
+    console.log('joined room ', this.state.roomName);
+
+    //listen for do change
+    this.state.socket.on('docChange', (editorState) => {
+      var convertedEditorState = convertFromRaw(JSON.parse(editorState));
+      this.setState({
+          editorState: EditorState.createWithContent(convertedEditorState)
+      });
+    })
+  }
+
+  emitChange(editorState){
+    //emit change
+    var rawJsonEditorState = convertToRaw(editorState.getCurrentContent());
+    this.state.socket.to(this.state.roomName).broadcast.emit('docChange', {editorState: JSON.stringify(rawJsonEditorState)})
+    })
   }
 
   handleKeyCommand(command, editorState) {
@@ -137,7 +158,6 @@ class Document extends React.Component {
   }
 
   _onSaveClick(e){
-    console.log(this.state)
     var rawJsonEditorState = convertToRaw(this.state.editorState.getCurrentContent()); //maybe EditorState.convertToRaw(this.state.editorState.getCurrentContent());
     this.state.socket.emit('saveDocumentContents', {documentId: this.props.docSummary._id, editorState: JSON.stringify(rawJsonEditorState)})
   }

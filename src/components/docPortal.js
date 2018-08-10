@@ -136,6 +136,11 @@ class DocPortal extends React.Component {
     return <Slide direction="up" {...props} />;
   }
 
+  _onLogout = () => {
+    console.log('in logout in docPortal')
+    this.props.logout();
+  }
+
   render() {
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
@@ -149,7 +154,7 @@ class DocPortal extends React.Component {
                     : 'loading'
                 }
             </Typography>
-            <Button varient="fab" className="searchButton">
+            <Button varient="fab" onClick={this._onLogout} className="searchButton">
               <Search />
             </Button>
           </Toolbar>

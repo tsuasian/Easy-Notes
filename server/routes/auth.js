@@ -20,9 +20,9 @@ router.post('/signup', function(req, res){
   //check uniqueness
   User.find({username: req.body.username})
   .then( (uniqueuser) => {
-    if (uniqueuser.length !== 0) {
+    if (uniqueuser.length !== 0 || req.body.username == "") {
       console.log('user already exists', uniqueuser);
-      res.status(420).json({error: "name taken"})
+      res.status(420).json({error: "Name already taken!"})
     } else {
       //otherwise, save the result
       new User({
@@ -67,6 +67,10 @@ router.post('/login', (req, res, next) => {
     res.json({user: req.user})
   })
 
+  router.get('/logout', function(req, res) {
+    console.log('hit logout route');
+    req.logout();
+  });
 
 
 

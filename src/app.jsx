@@ -65,6 +65,16 @@ export default class App extends React.Component {
     })
   }
 
+  logout = () => {
+    console.log('in app.js logout')
+    axios.get(dbUrl+'/logout')
+    .then(
+      this.setState({
+        loggedIn: false,
+      })
+    )
+  }
+
   setSummary(docSummary){
     console.log('in setSummary in app.jsx, docSummary: ', docSummary)
     this.setState({
@@ -94,6 +104,7 @@ export default class App extends React.Component {
     })
   }
 
+
   render() {
 
     console.log(this.state.usernameExists);
@@ -101,7 +112,7 @@ export default class App extends React.Component {
       this.state.loggedIn
       ? (this.state.docSummary && this.state.docContent)
         ? <Document setNull={this.setDocChosenToNull.bind(this)} docSummary={this.state.docSummary} docContent={this.state.docContent} socket={this.state.socket} io={io}/>
-        : <DocPortal socket={this.state.socket} setSummary={this.setSummary.bind(this)} setContents={this.setContents.bind(this)}/>
+        : <DocPortal socket={this.state.socket} setSummary={this.setSummary.bind(this)} setContents={this.setContents.bind(this)} logout={this.logout}/>
       : <LogReg registerUser={this.registerUser} loginUser={this.loginUser} usernameExists={this.state.usernameExists} resetUsernameExists={this.resetUsernameExists}/>
     );
   }

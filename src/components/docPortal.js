@@ -11,6 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
 import TextField from '@material-ui/core/TextField';
 import theme from './theme/theme.js'
@@ -154,21 +155,21 @@ class DocPortal extends React.Component {
                 }
             </Typography>
             <Button varient="fab" onClick={this._onLogout} className="searchButton">
-              <Search />
+              <AccountCircle />
             </Button>
           </Toolbar>
         </AppBar>
       </div>
       <Divider />
       {/* documents pulled from db */}
-      <Paper>
+      <Paper style={{overflow:"auto", maxHeight: 500}}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell style={{fontSize: 14}} variant="head">Document Names</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody style={{overflow:"auto"}}>
             {this.state.documents.map((document) => {
                 return (
                   <div className="renderDocsandButton">

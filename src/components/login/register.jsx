@@ -67,6 +67,7 @@ export default class Register extends React.Component{
     return (
       <div className="box-container">
         <MuiThemeProvider theme={theme}>
+          <CssBaseline />
         <AppBar position="static" color="primary">
           <Toolbar>
             <Typography variant="title" color="textPrimary">

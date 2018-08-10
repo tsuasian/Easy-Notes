@@ -17,6 +17,7 @@ import FormatItalic from '@material-ui/icons/FormatItalic';
 import FormatStrikethrough from '@material-ui/icons/FormatStrikethrough';
 import FormatAlignRight from '@material-ui/icons/FormatAlignRight';
 import FormatAlignCenter from '@material-ui/icons/FormatAlignCenter';
+import BorderColor from '@material-ui/icons/BorderColor';
 import FormatAlignLeft from '@material-ui/icons/FormatAlignLeft';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import CloudUpload from '@material-ui/icons/CloudUpload';
@@ -308,6 +309,9 @@ class Document extends React.Component {
           </Button>
           <Button className="toolbar-btn" onClick={() => this._onRightAlignClick()}>
             <FormatAlignRight />
+          </Button>
+          <Button className="toolbar-btn">
+            <BorderColor />
           </Button>
 
           <FontMenu

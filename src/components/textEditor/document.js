@@ -39,7 +39,9 @@ const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 
 const styleMap = {
   'STRIKETHROUGH': {
     textDecoration: 'line-through',
-    // backgroundColor: 'yellow'
+  },
+  'HIGHLIGHT' : {
+    backgroundColor: 'yellow'
   }
 }
 
@@ -152,12 +154,6 @@ class Document extends React.Component {
     var newColor = e.target.getAttribute('value');
     this.onChange(styles.color.toggle(this.state.editorState, newColor));
   }
-  // 
-  // _handleHighlightText(e){
-  //   this.setState(e){
-  //
-  //   }
-  // }
 
   _setColorAnchorEl(e){
     this.setState({
@@ -227,7 +223,7 @@ class Document extends React.Component {
   }
 
   _testEmit(e){
-    this.state.socket.emit('test', (this.state.editorState.getSelection()))
+    this.state.socket.emit('test', (this.state.editorState.getSelection(), this.state.editorState.getCurrentContent()))
   }
 
   render(){
@@ -310,7 +306,7 @@ class Document extends React.Component {
           <Button className="toolbar-btn" onClick={() => this._onRightAlignClick()}>
             <FormatAlignRight />
           </Button>
-          <Button className="toolbar-btn">
+          <Button value="HIGHLIGHT" className="toolbar-btn" onClick={(e) => this._toggleStyle(e)}>
             <BorderColor />
           </Button>
 

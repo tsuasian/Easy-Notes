@@ -222,10 +222,6 @@ class Document extends React.Component {
     })
   }
 
-  _testEmit(e){
-    this.state.socket.emit('test', (this.state.editorState.getSelection(), this.state.editorState.getCurrentContent()))
-  }
-
   render(){
     const { colorAnchorEl } = this.state;
     const { fontAnchorEl } = this.state;
@@ -282,9 +278,6 @@ class Document extends React.Component {
           </AppBar>
         </div>
         <div className="toolbar">
-          <Button value="Emit" className="toolbar-btn" onClick={(e) => this._testEmit(e)}>
-            emit
-          </Button>
           <Button value="BOLD" className="toolbar-btn" onClick={(e) => this._toggleStyle(e)}>
             <FormatBold />
           </Button>

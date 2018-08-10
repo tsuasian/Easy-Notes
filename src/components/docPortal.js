@@ -150,13 +150,12 @@ class DocPortal extends React.Component {
       openUser: true
     })
     console.log('in logout in docPortal')
-    // this.props.logout();
   }
 
   _onCloseUser() {
     this.setState({
       openUser: false
-    })
+    });
     this.props.logout()
   }
 
@@ -194,7 +193,7 @@ class DocPortal extends React.Component {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => this._onCloseDialog()} color="secondary" autoFocus>
+                <Button onClick={() => this._onCloseDialog()} color="secondary">
                   Cancel
                 </Button>
                 <Button onClick={() => this._onCloseUser()} color="secondary">

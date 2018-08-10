@@ -4,20 +4,20 @@
 }
 
 .editor {
-  border: 1px solid grey;
+  /* border: 1px solid grey; */
   padding: 6px;
   margin-left: 20px;
   margin-right: 20px;
   margin-top: 10px;
-  height: 500px;
-  width: 500px;
+  height: 800px;
+  width: 600px;
 }
 
 .toolbar {
   display: flex;
   flex-direction: row;
   margin-top: 20px;
-  width: 400px;
+  margin-bottom: 20px;
 }
 
 .toolbar-btn{
@@ -34,4 +34,22 @@
 
 .alignCenterClass{
   text-align: center;
+}
+
+.docshare-toolbar {
+  margin-bottom: 70px;
+}
+
+.textEditorGrandma {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.editorPaper {
+  width: 600px;
+  height: 800px;
+  margin-top: 20px;
+  overflow: auto;
 }

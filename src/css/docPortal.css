@@ -49,12 +49,12 @@
 .addCollabButton {
   height: 1em;
   width: 1em;
-  margin-top: 14px !important;
+  margin-top: 6px !important;
   margin-right: 10px;
 }
 
 .addCollabDiv {
-  margin-right: 25px;
+  margin-right: 0px;
 }
 
 .renderDocsandButton {

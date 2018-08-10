@@ -115,7 +115,7 @@ export default class Register extends React.Component{
               <Button
                 className="btnStyleCustom"
                 onClick={this.onSwitchMode.bind(this)}
-                >Click Here To Login
+                >Go Back to Login
               </Button>
           </Paper>
         </div>

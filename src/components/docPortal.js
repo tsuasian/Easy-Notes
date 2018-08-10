@@ -31,6 +31,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
 const NGROK_URL = process.env.NGROK_URL;
 class DocPortal extends React.Component {
   constructor(props) {
@@ -44,7 +46,8 @@ class DocPortal extends React.Component {
       newDocumentName: "",
       openShare: false,
       shareUsername: '',
-      currentShareDocID: ''
+      currentShareDocID: '',
+      openUser: false
     }
 
     this.createDocument = this.createDocument.bind(this);
@@ -126,6 +129,12 @@ class DocPortal extends React.Component {
     this.state.socket.emit('inviteUser', {documentId: this.state.currentShareDocID, username: this.state.shareUsername})
   }
 
+  handleJustClose() {
+    this.setState({
+      openShare: false
+    })
+  }
+
   handleOnChange(e) {
     this.setState({
       shareUsername: e.target.value
@@ -137,13 +146,30 @@ class DocPortal extends React.Component {
   }
 
   _onLogout = () => {
+    this.setState({
+      openUser: true
+    })
     console.log('in logout in docPortal')
-    this.props.logout();
+    // this.props.logout();
+  }
+
+  _onCloseUser() {
+    this.setState({
+      openUser: false
+    })
+    this.props.logout()
+  }
+
+  _onCloseDialog() {
+    this.setState({
+      openUser: false
+    })
   }
 
   render() {
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
+      <CssBaseline />
       <div className="navbar-container">
         <AppBar postion="static" color="primary" className="appbarDoc">
           <Toolbar>
@@ -154,9 +180,28 @@ class DocPortal extends React.Component {
                     : 'loading'
                 }
             </Typography>
-            <Button varient="fab" onClick={this._onLogout} className="searchButton">
+            <Button varient="fab" onClick={this._onLogout} className="logoutButton">
               <AccountCircle />
             </Button>
+            <Dialog
+              open={this.state.openUser}
+              onClose={() => this._onCloseDialog()}
+              >
+              <DialogTitle id="alert-dialog-title">{"User Settings"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Are you sure you want to Logout?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => this._onCloseDialog()} color="secondary" autoFocus>
+                  Cancel
+                </Button>
+                <Button onClick={() => this._onCloseUser()} color="secondary">
+                  Logout
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Toolbar>
         </AppBar>
       </div>
@@ -170,28 +215,39 @@ class DocPortal extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody style={{overflow:"auto"}}>
-            {this.state.documents.map((document) => {
-                return (
-                  <div className="renderDocsandButton">
-                    <List>
-                      <ListItem className="listDoc" key={document._id} button={true} value={document} onClick={(e)=>this.openDocument(e, document)}>
-                        <ListItemIcon>
-                          <Assignment />
-                        </ListItemIcon>
-                        <ListItemText key={document._id} primary={document.name} />
-                      </ListItem>
-                    </List>
-                    <div className="addCollabDiv">
-                      <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={(e) => this.handleCollaborators(e, document)}>
-                        <AddIcon />
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
+            <TableRow>
+              <TableCell>
+                <List>
+                {this.state.documents.map((document) => {
+                    return (
+                      <div key={document._id} className="renderDocsandButton">
+                          <ListItem
+                              className="listDoc"
+                              key={document._id}
+                              button={true}
+                              value={document}
+                              onClick={(e)=>this.openDocument(e, document)}
+                            >
+                            <ListItemIcon>
+                              <Assignment />
+                            </ListItemIcon>
+                            <ListItemText key={document._id} primary={document.name} />
+                          </ListItem>
+                        <div className="addCollabDiv">
+                          <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={(e) => this.handleCollaborators(e, document)}>
+                            <AddIcon />
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </List>
+              </TableCell>
+            </TableRow>
+
               <Dialog
                 open={this.state.openShare}
-                onClose={() => this.handleClose()}
+                onClose={() => this.handleJustClose()}
                 >
                 <DialogTitle id="alert-dialog-title">{"Share with Others"}</DialogTitle>
                 <DialogContent>
@@ -208,6 +264,9 @@ class DocPortal extends React.Component {
                   />
                 </DialogContent>
                 <DialogActions>
+                  <Button onClick={() => this.handleJustClose()} color="secondary" autoFocus>
+                    Cancel
+                  </Button>
                   <Button onClick={() => this.handleClose()} color="secondary" autoFocus>
                     Done
                   </Button>
@@ -229,11 +288,9 @@ class DocPortal extends React.Component {
             placeholder="Enter New Document Name"/>
         </div>
         <div>
-          <MuiThemeProvider>
             <Button className="login-btn btnStyleCustom" onClick={this.createDocument.bind(this)}>
               Create New Document
             </Button>
-          </MuiThemeProvider>
         </div>
       </div>
       </MuiThemeProvider>

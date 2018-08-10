@@ -15,6 +15,9 @@ const colors = ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', '
 class ColorMenu extends React.Component {
   constructor(props){
     super(props);
+    this.state={
+      indexSelected:null
+    }
   }
 
   _setColorAnchorEl(e){
@@ -56,7 +59,7 @@ class ColorMenu extends React.Component {
             horizontal: 'center',
           }}
         >
-          <Paper>
+          <Paper style={{maxHeight: 200, overflow: 'auto'}}>
             <ClickAwayListener onClickAway={(e)=>this._handleMenuClose(e)}>
               <MenuList>
                 {colors.map( (color, index) =>

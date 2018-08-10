@@ -135,7 +135,8 @@ class DocPortal extends React.Component {
     return <Slide direction="up" {...props} />;
   }
 
-  _onLogout(){
+  _onLogout = () => {
+    console.log('in logout in docPortal')
     this.props.logout();
   }
 

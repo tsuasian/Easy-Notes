@@ -177,19 +177,29 @@ io.on('connection', function(socket)  {
   //SHARE DOCUMENT WITH ANOTHER USER
   socket.on('inviteUser', ({documentId, username}) => {
     //add document to user's document array
+    console.log("hit socket invite user")
     User.findOne({username})
     .then( (addedUser) => {
-      addedUser.documents.push(documentId);
-      addedUser.save()
+      //check if already shared
+      if (addedUser.documents.indexOf(documentId) == -1) {
+        addedUser.documents.push(documentId);
+        addedUser.save()
+        console.log("user saved")
+      }
+    }).catch(() => {
+      console.log("user not found in invite user socket")
     })
     //add user to document's collaborators array
     Document.findById(documentId)
     .then( (document) => {
+      console.log("documentId", documentId);
+      console.log("document found", document);
+      console.log("collaborators before push", document.collaborators);
       document.collaborators.push(username);
       console.log("document's collaborators", document.collaborators);
     })
     .catch( (error) => {
-      console.log("error");
+      console.log("error docs not found");
     })
   });
 

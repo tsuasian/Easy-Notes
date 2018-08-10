@@ -6,10 +6,7 @@ const DocumentSchema = new mongoose.Schema({
     ref: 'User',
     type: mongoose.Schema.ObjectId
   },
-  collaborators: [{
-    ref: 'User',
-    type: mongoose.Schema.ObjectId
-  }],
+  collaborators: Array,
   name: String,
   rawState: String,
   shareURI: String,

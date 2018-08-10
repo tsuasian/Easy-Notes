@@ -41,7 +41,9 @@ class DocPortal extends React.Component {
       //array of document objects
       documents: [],
       newDocumentName: "",
-      openShare: false
+      openShare: false,
+      shareUsername: '',
+      currentShareDocID: ''
     }
 
     this.createDocument = this.createDocument.bind(this);
@@ -107,14 +109,25 @@ class DocPortal extends React.Component {
   }
 
   handleCollaborators(e, doc) {
+    console.log("current doc opened", doc)
     this.setState({
-      openShare: true
+      openShare: true,
+      currentShareDocID: doc._id
     })
   }
 
   handleClose() {
+    console.log("textfield value state", this.state.shareUsername)
+    console.log("doc id", this.state.currentShareDocID)
     this.setState({
       openShare: false
+    })
+    this.state.socket.emit('inviteUser', {documentId: this.state.currentShareDocID, username: this.state.shareUsername})
+  }
+
+  handleOnChange(e) {
+    this.setState({
+      shareUsername: e.target.value
     })
   }
 
@@ -185,6 +198,7 @@ class DocPortal extends React.Component {
                     className="tempyeet"
                     placeholder="Enter Username"
                     fullWidth
+                    onChange={(e) => this.handleOnChange(e)}
                   />
                 </DialogContent>
                 <DialogActions>

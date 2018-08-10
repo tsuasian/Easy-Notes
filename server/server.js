@@ -138,6 +138,16 @@ io.on('connection', function(socket)  {
 
     })
 
+    //listen for a change in selection state
+    socket.on('selectChange' , ({selectionState, roomName}) =>{
+      console.log("roomName from docChange", roomName);
+      console.log("editorsstate", editorState);
+      console.log('type of editorstate', typeof(editorState));
+      //reply back to all other sockets in room
+      socket.broadcast.to(roomName).emit('newEditorState', editorState);
+
+      })
+
 
   //now listen for emit message event
   //SAVE DOCUMENT CONTENTS (TO MDB)

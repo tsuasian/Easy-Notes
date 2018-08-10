@@ -126,7 +126,7 @@ class DocPortal extends React.Component {
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
       <div className="navbar-container">
-        <AppBar postion="static" color="primary" className="appbarDoc" square={false}>
+        <AppBar postion="static" color="primary" className="appbarDoc">
           <Toolbar>
             <Typography variant="title" color="textPrimary" style={{flexGrow: 1}}>
                 {

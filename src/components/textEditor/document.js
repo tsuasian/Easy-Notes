@@ -38,7 +38,8 @@ import TextField from '@material-ui/core/TextField';
 const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
 const styleMap = {
   'STRIKETHROUGH': {
-    textDecoration: 'line-through'
+    textDecoration: 'line-through',
+    // backgroundColor: 'yellow'
   }
 }
 
@@ -151,6 +152,12 @@ class Document extends React.Component {
     var newColor = e.target.getAttribute('value');
     this.onChange(styles.color.toggle(this.state.editorState, newColor));
   }
+  // 
+  // _handleHighlightText(e){
+  //   this.setState(e){
+  //
+  //   }
+  // }
 
   _setColorAnchorEl(e){
     this.setState({
@@ -219,6 +226,10 @@ class Document extends React.Component {
     })
   }
 
+  _testEmit(e){
+    this.state.socket.emit('test', (this.state.editorState.getSelection()))
+  }
+
   render(){
     const { colorAnchorEl } = this.state;
     const { fontAnchorEl } = this.state;
@@ -275,6 +286,9 @@ class Document extends React.Component {
           </AppBar>
         </div>
         <div className="toolbar">
+          <Button value="Emit" className="toolbar-btn" onClick={(e) => this._testEmit(e)}>
+            emit
+          </Button>
           <Button value="BOLD" className="toolbar-btn" onClick={(e) => this._toggleStyle(e)}>
             <FormatBold />
           </Button>

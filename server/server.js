@@ -220,15 +220,21 @@ io.on('connection', function(socket)  {
 
   //edit title
   socket.on('editTitle', ({documentId, newTitle}) => {
-    Document.findById(docuentId)
+    Document.findById(documentId)
     .then( (document)  => {
       document.name = newTitle;
       document.save()
       console.log("updated document.name to ", document.name);
     })
+    .catch(error => {
+      console.log("couldn't find document", error);
+    })
   })
 
-  
+  socket.on('test', (selectionState, contentState) => {
+    console.log('selectionstate', selectionState);
+    console.log('contentState', contentState);
+  })
 
 
 

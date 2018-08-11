@@ -211,6 +211,9 @@ class DocPortal extends React.Component {
       <div className="navbar-container">
         <AppBar postion="static" color="primary" className="appbarDoc">
           <Toolbar>
+            <Button className="menuIcon" aria-label="Menu">
+              <MenuIcon />
+            </Button>
             <Typography variant="title" color="textPrimary" style={{flexGrow: 1}}>
                 {
                   this.state.user

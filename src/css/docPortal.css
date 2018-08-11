@@ -92,3 +92,7 @@
 ::-webkit-scrollbar {
     display: none;
 }
+
+.menuIcon {
+  margin-left: 5px;
+}

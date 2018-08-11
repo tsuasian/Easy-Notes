@@ -317,7 +317,7 @@ class Document extends React.Component {
                 }}
                 className="savedSnackBar"
                 open={this.state.snackBarSaved}
-                autoHideDuration={3000}
+                autoHideDuration={2000}
                 onClose={() => this._handleCloseSnackBar()}
                 ContentProps={{
                   'aria-describedby': 'message-saved',

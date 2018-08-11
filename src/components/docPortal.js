@@ -346,26 +346,6 @@ class DocPortal extends React.Component {
         </TableBody>
         </Table>
       </Paper>
-
-      {/* add new document */}
-      {/* <div className="newDocDiv">
-        <Paper className="newDocInput">
-        <div>
-          <TextField id="newDocumentName"
-            onChange={(e) => this.setState({newDocumentName: e.target.value})}
-            type="text" name="newDocumentName"
-            label="Create New Document"
-            value={this.state.newDocumentName}
-            className="login-input"
-            placeholder="Enter New Document Name"/>
-        </div>
-        <div className="newdocButton">
-            <Button className="login-btn btnStyleCustom" onClick={this.createDocument.bind(this)}>
-              Create New Document
-            </Button>
-        </div>
-        </Paper>
-      </div> */}
       </MuiThemeProvider>
     </div>);
   }

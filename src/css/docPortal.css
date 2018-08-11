@@ -84,4 +84,10 @@
   margin-left: 25px;
   margin-right: 25px;
   margin-top: 35px;
+  margin-bottom: 25px;
+  max-height: 850px;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }

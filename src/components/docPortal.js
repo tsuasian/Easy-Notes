@@ -278,14 +278,13 @@ class DocPortal extends React.Component {
       </div>
       <Divider />
       {/* documents pulled from db */}
-      <Paper style={{overflow:"auto", maxHeight: 700}}>
+      <Paper className="docsPaper">
         <Table className="tableDoc">
           <TableHead>
             <TableRow>
               <TableCell style={{fontSize: 14}} variant="head">Document Names</TableCell>
             </TableRow>
           </TableHead>
-          {this.state.documents ?
           <TableBody style={{overflow:"auto"}}>
             <TableRow>
               <TableCell>
@@ -344,7 +343,7 @@ class DocPortal extends React.Component {
                   </Button>
                 </DialogActions>
               </Dialog>
-        </TableBody> : <CircularProgress color="secondary"/>}
+        </TableBody>
         </Table>
       </Paper>
 

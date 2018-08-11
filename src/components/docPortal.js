@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
+import Refresh from '@material-ui/icons/Refresh';
 import TextField from '@material-ui/core/TextField';
 import theme from './theme/theme.js'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
@@ -34,6 +35,7 @@ import Slide from '@material-ui/core/Slide';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import TagFaces from '@material-ui/icons/TagFaces';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const NGROK_URL = process.env.NGROK_URL;
 class DocPortal extends React.Component {
@@ -51,6 +53,7 @@ class DocPortal extends React.Component {
       currentShareDocID: '',
       openUser: false,
       openNewDoc: false,
+      docsLoaded: false
     }
 
     this.createDocument = this.createDocument.bind(this);
@@ -58,7 +61,7 @@ class DocPortal extends React.Component {
   componentDidMount() {
     //    SETUP USERS
     var self = this;
-    axios.get('http://122b3c92.ngrok.io'+'/getUser').then(user => {
+    axios.get('http://localhost:1337'+'/getUser').then(user => {
       self.setState({user: user.data})
     }).then(() => {
       self.state.socket.on('documentCreated', (newDocument) => {
@@ -180,6 +183,26 @@ class DocPortal extends React.Component {
     })
   }
 
+  _refresh() {
+    var self = this;
+    axios.get('http://localhost:1337'+'/getUser').then(user => {
+      self.setState({user: user.data})
+    }).then(() => {
+      self.state.socket.on('documentCreated', (newDocument) => {
+        var documents = self.state.documents.slice();
+        //array of document objects
+        documents.push(newDocument);
+        self.setState({documents})
+      })
+      self.state.socket.emit('loadDocuments', self.state.user.user)
+      self.state.socket.on('documentsLoaded', (newDocArr) => {
+        self.setState({documents: newDocArr})
+      });
+    }).catch(e => {
+      console.log("error", e);
+    })
+  }
+
   render() {
     return (<div className="container-docportal">
       <MuiThemeProvider theme={theme}>
@@ -194,11 +217,13 @@ class DocPortal extends React.Component {
                     : 'loading'
                 }
             </Typography>
+            <Button varient="fab" onClick={() => this._refresh()}>
+              <Refresh />
+            </Button>
             <Button varient="fab" onClick={() => this._onOpenDoc()} className="logoutButton">
               <AddIcon />
               <Assignment />
             </Button>
-
             <Dialog
               open={this.state.openNewDoc}
               onClose={() => this._onCloseDoc()}
@@ -254,12 +279,13 @@ class DocPortal extends React.Component {
       <Divider />
       {/* documents pulled from db */}
       <Paper style={{overflow:"auto", maxHeight: 700}}>
-        <Table>
+        <Table className="tableDoc">
           <TableHead>
             <TableRow>
               <TableCell style={{fontSize: 14}} variant="head">Document Names</TableCell>
             </TableRow>
           </TableHead>
+          {this.state.documents ?
           <TableBody style={{overflow:"auto"}}>
             <TableRow>
               <TableCell>
@@ -289,9 +315,8 @@ class DocPortal extends React.Component {
                     );
                   })}
                 </List>
-              </TableCell>
-            </TableRow>
-
+                </TableCell>
+              </TableRow>
               <Dialog
                 open={this.state.openShare}
                 onClose={() => this.handleJustClose()}
@@ -319,7 +344,7 @@ class DocPortal extends React.Component {
                   </Button>
                 </DialogActions>
               </Dialog>
-        </TableBody>
+        </TableBody> : <CircularProgress color="secondary"/>}
         </Table>
       </Paper>
 

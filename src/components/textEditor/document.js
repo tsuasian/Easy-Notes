@@ -34,6 +34,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
+import AddIcon from '@material-ui/icons/Add';
+import TagFaces from '@material-ui/icons/TagFaces';
 
 const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
 const styleMap = {
@@ -73,7 +75,9 @@ class Document extends React.Component {
       socket: this.props.socket,
       roomName: String(this.props.docSummary._id),
       editTitle: false,
-      titleContent: ''
+      titleContent: '',
+      shareUsername: '',
+      shareUser: false,
     }
     this.onChange = (editorState) => {
       this.emitChange(editorState);
@@ -189,8 +193,12 @@ class Document extends React.Component {
     this.state.socket.emit('saveDocumentContents', {documentId: this.props.docSummary._id, editorState: JSON.stringify(rawJsonEditorState)})
   }
 
-  _onShareClick(e){
-    this.state.socket.emit('shareDocument', {documentId: this.props.document.documentId}) //need to add a newUserId parameter to this emit
+  _onShareClick(e) {
+    this.setState({
+      shareUser: false
+    })
+    console.log("username state", this.state.shareUsername)
+    this.state.socket.emit('inviteUser', {documentId: this.props.docSummary._id, username: this.state.shareUsername}) //need to add a newUserId parameter to this emit
   }
 
   _onBackClick() {
@@ -219,6 +227,24 @@ class Document extends React.Component {
   handleOnChange(e) {
     this.setState({
       titleContent: e.target.value
+    })
+  }
+
+  handleChangeUserShare(e) {
+    this.setState({
+      shareUsername: e.target.value
+    })
+  }
+
+  _handleUserShareOpen() {
+    this.setState({
+      shareUser: true
+    })
+  }
+
+  _handleCloseUserShare() {
+    this.setState({
+      shareUser: false
     })
   }
 
@@ -268,9 +294,37 @@ class Document extends React.Component {
               </Typography>
               <Button className="toolbar-btn" onClick={this._onSaveClick.bind(this)}>
                 <SaveAlt />
-              </Button><Button className="toolbar-btn" onClick={(e) => this._onShareClick(e)}>
-                <CloudUpload />
+              </Button><Button className="toolbar-btn" onClick={() => this._handleUserShareOpen()}>
+                <AddIcon/>
+                <TagFaces/>
               </Button>
+              <Dialog
+                open={this.state.shareUser}
+                onClose={() => this._handleCloseUserShare()}
+                >
+                <DialogTitle id="alert-dialog-title">{"Share Document"}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Share Document With Others
+                  </DialogContentText>
+                  <TextField
+                    type="text" name="newDocumentTitle"
+                    label="Add User"
+                    className="tempyeet"
+                    placeholder="Enter Username"
+                    fullWidth
+                    onChange={(e) => this.handleChangeUserShare(e)}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => this._handleCloseUserShare()} color="secondary">
+                    Cancel
+                  </Button>
+                  <Button onClick={() => this._onShareClick()} color="secondary">
+                    Submit
+                  </Button>
+                </DialogActions>
+              </Dialog>
               <Button className="toolbar-btn" onClick={()=>this.props.setNull()}>
                 <Home/>
               </Button>

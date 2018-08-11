@@ -22,6 +22,7 @@ import FormatAlignLeft from '@material-ui/icons/FormatAlignLeft';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import Home from '@material-ui/icons/Home'
+import Save from '@material-ui/icons/Save'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -36,6 +37,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
 import TagFaces from '@material-ui/icons/TagFaces';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
 const styleMap = {
@@ -78,6 +83,7 @@ class Document extends React.Component {
       titleContent: '',
       shareUsername: '',
       shareUser: false,
+      snackBarSaved: false,
     }
     this.onChange = (editorState) => {
       this.emitChange(editorState);
@@ -191,6 +197,9 @@ class Document extends React.Component {
   _onSaveClick(e){
     var rawJsonEditorState = convertToRaw(this.state.editorState.getCurrentContent()); //maybe EditorState.convertToRaw(this.state.editorState.getCurrentContent());
     this.state.socket.emit('saveDocumentContents', {documentId: this.props.docSummary._id, editorState: JSON.stringify(rawJsonEditorState)})
+    this.setState({
+      snackBarSaved: true
+    })
   }
 
   _onShareClick(e) {
@@ -248,6 +257,12 @@ class Document extends React.Component {
     })
   }
 
+  _handleCloseSnackBar() {
+    this.setState({
+      snackBarSaved: false
+    })
+  }
+
   render(){
     const { colorAnchorEl } = this.state;
     const { fontAnchorEl } = this.state;
@@ -293,8 +308,36 @@ class Document extends React.Component {
                 </Dialog>
               </Typography>
               <Button className="toolbar-btn" onClick={this._onSaveClick.bind(this)}>
-                <SaveAlt />
-              </Button><Button className="toolbar-btn" onClick={() => this._handleUserShareOpen()}>
+                <Save />
+              </Button>
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                className="savedSnackBar"
+                open={this.state.snackBarSaved}
+                autoHideDuration={3000}
+                onClose={() => this._handleCloseSnackBar()}
+                ContentProps={{
+                  'aria-describedby': 'message-saved',
+                }}>
+                <SnackbarContent
+                  message={<span id="message-id">Document Saved</span>}
+                  style={{backgroundColor: "#f8bbd0", color: "white"}}
+                  action={[
+                    <IconButton
+                      key="close"
+                      aria-label="Close"
+                      color="inherit"
+                      onClick={() => this._handleCloseSnackBar()}
+                    >
+                      <CloseIcon />
+                    </IconButton>,
+                  ]}
+                />
+              </Snackbar>
+              <Button className="toolbar-btn" onClick={() => this._handleUserShareOpen()}>
                 <AddIcon/>
                 <TagFaces/>
               </Button>

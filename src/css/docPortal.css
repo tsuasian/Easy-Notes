@@ -57,6 +57,7 @@
 
 .addCollabDiv {
   margin-right: 0px;
+  display: inherit;
 }
 
 .renderDocsandButton {

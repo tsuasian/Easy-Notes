@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
 import Refresh from '@material-ui/icons/Refresh';
+import Delete from '@material-ui/icons/Delete';
 import TextField from '@material-ui/core/TextField';
 import theme from './theme/theme.js'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
@@ -308,6 +309,9 @@ class DocPortal extends React.Component {
                           <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={(e) => this.handleCollaborators(e, document)}>
                             <AddIcon/>
                             <TagFaces/>
+                          </Button>
+                          <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={(e) => this.handleCollaborators(e, document)}>
+                            <Delete />
                           </Button>
                         </div>
                       </div>

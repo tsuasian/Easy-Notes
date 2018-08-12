@@ -40,10 +40,6 @@ export default class Login extends Component {
     const {username, password} = this.state;
     this.props.onLogin(username, password);
 
-    // socket.emit('login', {username, password}, (res) => {
-    //   navigate(DocumentList)
-    // })
-
   }
   render() {
     return (

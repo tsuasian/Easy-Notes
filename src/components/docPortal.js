@@ -1,42 +1,11 @@
 import React from 'react';
 import axios from 'axios'
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import Toolbar from '@material-ui/core/Toolbar';
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuIcon from '@material-ui/icons/Menu';
-import Refresh from '@material-ui/icons/Refresh';
-import Delete from '@material-ui/icons/Delete';
-import TextField from '@material-ui/core/TextField';
 import theme from './theme/theme.js'
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import { createMuiTheme } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Assignment from '@material-ui/icons/Assignment';
-import Search from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import TagFaces from '@material-ui/icons/TagFaces';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import {AppBar, Button,Toolbar,Table,TableBody,Slide,Tooltip,CircularProgress,CssBaseline,
+DialogTitle,DialogContentText,DialogContent,DialogActions,ListItemText,Dialog,TableCell,
+TableHead,TableRow,Paper,Typography,IconButton,TextField,MuiThemeProvider,styles,
+Divider,List,ListItem,ListItemIcon} from '@material-ui/core';
+import {Assignment,Search,Add,AccountCircle,Menu,Refresh,Delete,CloudUpload,TagFaces} from '@material-ui/icons';
 
 const NGROK_URL = process.env.NGROK_URL;
 class DocPortal extends React.Component {
@@ -84,14 +53,6 @@ class DocPortal extends React.Component {
     this.setState({newDocumentName: newName})
   }
 
-  // setSummary(docSummary){
-  //   this.props.setSummary(docSummary);
-  // }
-  //
-  // setContents(docContent){
-  //   this.props.setContents(docContent);
-  // }
-
   createDocument = () => {
     if (this.state.newDocumentName) {
       //set docsummary and docContent
@@ -110,8 +71,6 @@ class DocPortal extends React.Component {
   openDocument(e, doc){
     var documentSummary = doc;
     var docId = doc._id;
-    // console.log('documentSummary!!!', typeof documentSummary)
-    // console.log('docId!!!!: ', docId)
     this.state.socket.emit('loadDocumentContents', {documentId: docId});
     this.state.socket.on('documentContentsLoaded', (documentContent) => {
       this.props.setSummary(documentSummary);
@@ -212,7 +171,7 @@ class DocPortal extends React.Component {
         <AppBar postion="static" color="primary" className="appbarDoc">
           <Toolbar>
             <Button className="menuIcon" aria-label="Menu">
-              <MenuIcon />
+              <Menu />
             </Button>
             <Typography variant="title" color="textPrimary" style={{flexGrow: 1}}>
                 {
@@ -224,10 +183,12 @@ class DocPortal extends React.Component {
             <Button varient="fab" onClick={() => this._refresh()}>
               <Refresh />
             </Button>
-            <Button varient="fab" onClick={() => this._onOpenDoc()} className="logoutButton">
-              <AddIcon />
-              <Assignment />
-            </Button>
+            <Tooltip disableFocusListener disableTouchListener title="New Document">
+              <Button varient="fab" onClick={() => this._onOpenDoc()} className="logoutButton">
+                <Add />
+                <Assignment />
+              </Button>
+            </Tooltip>
             <Dialog
               open={this.state.openNewDoc}
               onClose={() => this._onCloseDoc()}
@@ -310,7 +271,7 @@ class DocPortal extends React.Component {
                           </ListItem>
                         <div className="addCollabDiv">
                           <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={(e) => this.handleCollaborators(e, document)}>
-                            <AddIcon/>
+                            <Add/>
                             <TagFaces/>
                           </Button>
                           <Button varient="fab" aria-label="Add" className="addCollabButton" onClick={(e) => this.handleCollaborators(e, document)}>

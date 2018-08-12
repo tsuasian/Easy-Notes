@@ -3,44 +3,15 @@ import {Editor, EditorState, RichUtils, convertToRaw, convertFromRaw} from 'draf
 import createStyles from 'draft-js-custom-styles';
 import ColorMenu from './ColorMenu';
 import FontMenu from './FontMenu';
-//Material UI components
-import Button from '@material-ui/core/Button';
-import Popover from '@material-ui/core/Popover';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Paper from '@material-ui/core/Paper';
-import MenuList from '@material-ui/core/MenuList';
-import MenuItem from '@material-ui/core/MenuItem';
-//material ui icons
-import FormatUnderlined from '@material-ui/icons/FormatUnderlined';
-import FormatBold from '@material-ui/icons/FormatBold';
-import FormatItalic from '@material-ui/icons/FormatItalic';
-import FormatStrikethrough from '@material-ui/icons/FormatStrikethrough';
-import FormatAlignRight from '@material-ui/icons/FormatAlignRight';
-import FormatAlignCenter from '@material-ui/icons/FormatAlignCenter';
-import BorderColor from '@material-ui/icons/BorderColor';
-import FormatAlignLeft from '@material-ui/icons/FormatAlignLeft';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import Home from '@material-ui/icons/Home'
-import Save from '@material-ui/icons/Save'
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import theme from '../theme/theme.js'
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
-import AddIcon from '@material-ui/icons/Add';
-import TagFaces from '@material-ui/icons/TagFaces';
-import Snackbar from '@material-ui/core/Snackbar';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+
+import {TextField, DialogTitle, DialogContentText, DialogContent, DialogActions, Dialog,
+  CssBaseline, MuiThemeProvider, Typography, AppBar, Toolbar, Tooltip, Button, Popover,
+  ClickAwayListener, Paper, MenuList, MenuItem, Snackbar, SnackbarContent, IconButton} from '@material-ui/core';
+
+import {Close, TagFaces, Add, Save, CloudUpload, Home, FormatUnderlined, FormatBold,
+  FormatItalic, FormatStrikethrough, FormatAlignRight, FormatAlignCenter, FormatAlignLeft,
+  BorderColor, SaveAlt} from '@material-ui/icons';
 
 const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
 const styleMap = {
@@ -332,15 +303,18 @@ class Document extends React.Component {
                       color="inherit"
                       onClick={() => this._handleCloseSnackBar()}
                     >
-                      <CloseIcon />
+                      <Close />
                     </IconButton>,
                   ]}
                 />
               </Snackbar>
-              <Button className="toolbar-btn" onClick={() => this._handleUserShareOpen()}>
-                <AddIcon/>
-                <TagFaces/>
-              </Button>
+              <Tooltip disableFocusListener disableTouchListener title="Add Collaborators">
+                <Button className="toolbar-btn" onClick={() => this._handleUserShareOpen()}>
+                  <Add/>
+                  <TagFaces/>
+                </Button>
+              </Tooltip>
+
               <Dialog
                 open={this.state.shareUser}
                 onClose={() => this._handleCloseUserShare()}

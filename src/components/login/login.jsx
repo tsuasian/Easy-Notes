@@ -14,7 +14,6 @@ import Lock from '@material-ui/icons/Lock';
 import Assignment from '@material-ui/icons/Assignment';
 import Face from '@material-ui/icons/Face';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import GoogleLogin from 'react-google-login';
 
 export default class Login extends Component {
   constructor(props) {
@@ -42,9 +41,6 @@ export default class Login extends Component {
     this.props.onLogin(username, password);
   }
 
-  responseGoogle = (response) => {
-    console.log("Google response: ", response);
-  }
 
   render() {
     return (
@@ -87,12 +83,6 @@ export default class Login extends Component {
                   onClick={this.onLogin}
                   >Login
                 </Button>
-                <GoogleLogin
-                  clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
-                  buttonText="Login"
-                  onSuccess={this.responseGoogle}
-                  onFailure={this.responseGoogle}
-                />
                 <Button
                   type="Button"
                   className="login-btn btnStyleCustom"

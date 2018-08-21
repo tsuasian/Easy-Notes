@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "src/index.js",
-  "proxy": "http://122b3c92.ngrok.io",
+  "proxy": "http://localhost:1337",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -76,6 +76,7 @@
     "passport-local": "^1.0.0",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
+    "react-google-login": "^3.2.1",
     "react-hot-loader": "^4.3.4",
     "socket.io": "^2.1.1"
   },

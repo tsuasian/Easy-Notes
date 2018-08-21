@@ -9,6 +9,8 @@ import Paper from '@material-ui/core/Paper';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormatColorText from '@material-ui/icons/FormatColorText';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 const colors = ['black', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
 
 
@@ -66,7 +68,7 @@ class ColorMenu extends React.Component {
                   <MenuItem
                     key={index}
                     value={color}
-                    style={{color:String(color), backgroundColor: '#eaecef', borderTop: '1px solid #bdbebf'}}
+                    style={{color:String(color), backgroundColor: String(color)}} //backgroundColor: '#eaecef', borderTop: '1px solid #bdbebf'
                     onClick={(e)=>this._handleColorChange(e)}>{color}</MenuItem>
                 )}
               </MenuList>

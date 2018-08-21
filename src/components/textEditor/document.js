@@ -3,43 +3,23 @@ import {Editor, EditorState, RichUtils, convertToRaw, convertFromRaw} from 'draf
 import createStyles from 'draft-js-custom-styles';
 import ColorMenu from './ColorMenu';
 import FontMenu from './FontMenu';
-//Material UI components
-import Button from '@material-ui/core/Button';
-import Popover from '@material-ui/core/Popover';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Paper from '@material-ui/core/Paper';
-import MenuList from '@material-ui/core/MenuList';
-import MenuItem from '@material-ui/core/MenuItem';
-//material ui icons
-import FormatUnderlined from '@material-ui/icons/FormatUnderlined';
-import FormatBold from '@material-ui/icons/FormatBold';
-import FormatItalic from '@material-ui/icons/FormatItalic';
-import FormatStrikethrough from '@material-ui/icons/FormatStrikethrough';
-import FormatAlignRight from '@material-ui/icons/FormatAlignRight';
-import FormatAlignCenter from '@material-ui/icons/FormatAlignCenter';
-import BorderColor from '@material-ui/icons/BorderColor';
-import FormatAlignLeft from '@material-ui/icons/FormatAlignLeft';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import Home from '@material-ui/icons/Home'
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import theme from '../theme/theme.js'
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
+
+import {TextField, DialogTitle, DialogContentText, DialogContent, DialogActions, Dialog,
+  CssBaseline, MuiThemeProvider, Typography, AppBar, Toolbar, Tooltip, Button, Popover,
+  ClickAwayListener, Paper, MenuList, MenuItem, Snackbar, SnackbarContent, IconButton} from '@material-ui/core';
+
+import {Close, TagFaces, Add, Save, CloudUpload, Home, FormatUnderlined, FormatBold,
+  FormatItalic, FormatStrikethrough, FormatAlignRight, FormatAlignCenter, FormatAlignLeft,
+  BorderColor, SaveAlt} from '@material-ui/icons';
 
 const { styles, customStyleFn, exporter } = createStyles(['font-size', 'color', 'text-transform', 'text-alignment'], 'PREFIX_');
 const styleMap = {
   'STRIKETHROUGH': {
     textDecoration: 'line-through',
-    // backgroundColor: 'yellow'
+  },
+  'HIGHLIGHT' : {
+    backgroundColor: 'yellow'
   }
 }
 
@@ -71,7 +51,10 @@ class Document extends React.Component {
       socket: this.props.socket,
       roomName: String(this.props.docSummary._id),
       editTitle: false,
-      titleContent: ''
+      titleContent: '',
+      shareUsername: '',
+      shareUser: false,
+      snackBarSaved: false,
     }
     this.onChange = (editorState) => {
       this.emitChange(editorState);
@@ -152,12 +135,6 @@ class Document extends React.Component {
     var newColor = e.target.getAttribute('value');
     this.onChange(styles.color.toggle(this.state.editorState, newColor));
   }
-  // 
-  // _handleHighlightText(e){
-  //   this.setState(e){
-  //
-  //   }
-  // }
 
   _setColorAnchorEl(e){
     this.setState({
@@ -191,10 +168,17 @@ class Document extends React.Component {
   _onSaveClick(e){
     var rawJsonEditorState = convertToRaw(this.state.editorState.getCurrentContent()); //maybe EditorState.convertToRaw(this.state.editorState.getCurrentContent());
     this.state.socket.emit('saveDocumentContents', {documentId: this.props.docSummary._id, editorState: JSON.stringify(rawJsonEditorState)})
+    this.setState({
+      snackBarSaved: true
+    })
   }
 
-  _onShareClick(e){
-    this.state.socket.emit('shareDocument', {documentId: this.props.document.documentId}) //need to add a newUserId parameter to this emit
+  _onShareClick(e) {
+    this.setState({
+      shareUser: false
+    })
+    console.log("username state", this.state.shareUsername)
+    this.state.socket.emit('inviteUser', {documentId: this.props.docSummary._id, username: this.state.shareUsername}) //need to add a newUserId parameter to this emit
   }
 
   _onBackClick() {
@@ -226,8 +210,28 @@ class Document extends React.Component {
     })
   }
 
-  _testEmit(e){
-    this.state.socket.emit('test', (this.state.editorState.getSelection()))
+  handleChangeUserShare(e) {
+    this.setState({
+      shareUsername: e.target.value
+    })
+  }
+
+  _handleUserShareOpen() {
+    this.setState({
+      shareUser: true
+    })
+  }
+
+  _handleCloseUserShare() {
+    this.setState({
+      shareUser: false
+    })
+  }
+
+  _handleCloseSnackBar() {
+    this.setState({
+      snackBarSaved: false
+    })
   }
 
   render(){
@@ -275,10 +279,69 @@ class Document extends React.Component {
                 </Dialog>
               </Typography>
               <Button className="toolbar-btn" onClick={this._onSaveClick.bind(this)}>
-                <SaveAlt />
-              </Button><Button className="toolbar-btn" onClick={(e) => this._onShareClick(e)}>
-                <CloudUpload />
+                <Save />
               </Button>
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                className="savedSnackBar"
+                open={this.state.snackBarSaved}
+                autoHideDuration={2000}
+                onClose={() => this._handleCloseSnackBar()}
+                ContentProps={{
+                  'aria-describedby': 'message-saved',
+                }}>
+                <SnackbarContent
+                  message={<span id="message-id">Document Saved</span>}
+                  style={{backgroundColor: "#f8bbd0", color: "white"}}
+                  action={[
+                    <IconButton
+                      key="close"
+                      aria-label="Close"
+                      color="inherit"
+                      onClick={() => this._handleCloseSnackBar()}
+                    >
+                      <Close />
+                    </IconButton>,
+                  ]}
+                />
+              </Snackbar>
+              <Tooltip disableFocusListener disableTouchListener title="Add Collaborators">
+                <Button className="toolbar-btn" onClick={() => this._handleUserShareOpen()}>
+                  <Add/>
+                  <TagFaces/>
+                </Button>
+              </Tooltip>
+
+              <Dialog
+                open={this.state.shareUser}
+                onClose={() => this._handleCloseUserShare()}
+                >
+                <DialogTitle id="alert-dialog-title">{"Share Document"}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Share Document With Others
+                  </DialogContentText>
+                  <TextField
+                    type="text" name="newDocumentTitle"
+                    label="Add User"
+                    className="tempyeet"
+                    placeholder="Enter Username"
+                    fullWidth
+                    onChange={(e) => this.handleChangeUserShare(e)}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => this._handleCloseUserShare()} color="secondary">
+                    Cancel
+                  </Button>
+                  <Button onClick={() => this._onShareClick()} color="secondary">
+                    Submit
+                  </Button>
+                </DialogActions>
+              </Dialog>
               <Button className="toolbar-btn" onClick={()=>this.props.setNull()}>
                 <Home/>
               </Button>
@@ -286,9 +349,6 @@ class Document extends React.Component {
           </AppBar>
         </div>
         <div className="toolbar">
-          <Button value="Emit" className="toolbar-btn" onClick={(e) => this._testEmit(e)}>
-            emit
-          </Button>
           <Button value="BOLD" className="toolbar-btn" onClick={(e) => this._toggleStyle(e)}>
             <FormatBold />
           </Button>
@@ -310,7 +370,7 @@ class Document extends React.Component {
           <Button className="toolbar-btn" onClick={() => this._onRightAlignClick()}>
             <FormatAlignRight />
           </Button>
-          <Button className="toolbar-btn">
+          <Button value="HIGHLIGHT" className="toolbar-btn" onClick={(e) => this._toggleStyle(e)}>
             <BorderColor />
           </Button>
 

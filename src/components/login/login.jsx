@@ -39,12 +39,9 @@ export default class Login extends Component {
   onLogin = () => {
     const {username, password} = this.state;
     this.props.onLogin(username, password);
-
-    // socket.emit('login', {username, password}, (res) => {
-    //   navigate(DocumentList)
-    // })
-
   }
+
+
   render() {
     return (
       <div className="box-container">

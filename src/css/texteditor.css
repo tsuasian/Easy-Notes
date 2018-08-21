@@ -6,8 +6,8 @@
 .editor {
   /* border: 1px solid grey; */
   padding: 6px;
-  margin-left: 20px;
-  margin-right: 20px;
+  /* margin-left: 20px;
+  margin-right: 20px; */
   margin-top: 10px;
   height: 800px;
   width: 600px;
@@ -52,4 +52,9 @@
   height: 800px;
   margin-top: 20px;
   overflow: auto;
+}
+
+.savedSnackBar {
+  background-color: "#f48fb1";
+  color: "#FFFFFF"
 }

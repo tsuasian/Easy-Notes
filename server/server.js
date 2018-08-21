@@ -189,30 +189,38 @@ io.on('connection', function(socket)  {
     })
   })
 
-  //SHARE DOCUMENT WITH ANOTHER USER
+
+  //SHARE DOCUMENT -> pass in a username to share document
   socket.on('inviteUser', ({documentId, username}) => {
-    //add document to user's document array
-    console.log("hit socket invite user")
+
+    //find user object given unique username
     User.findOne({username})
+
     .then( (addedUser) => {
-      //check if already shared
-      if (addedUser.documents.indexOf(documentId) == -1) {
-        addedUser.documents.push(documentId);
-        addedUser.save()
-        console.log("user saved")
-      }
-    }).catch(() => {
+
+      //check if already shared, if so, ignore
+      //add document to "collaborating" attribute of the user
+        if (addedUser.documents.indexOf(documentId) == -1) {
+          addedUser.documents.push(documentId);
+          addedUser.save()
+        }
+
+      //catch errors
+      }).catch(() => {
       console.log("user not found in invite user socket")
     })
-    //add user to document's collaborators array
+
+    //now, add user to document's "collaborators" attribute
+    //find document by documentId
     Document.findById(documentId)
+
     .then( (document) => {
-      console.log("documentId", documentId);
-      console.log("document found", document);
-      console.log("collaborators before push", document.collaborators);
+      //push username onto document's array
       document.collaborators.push(username);
       console.log("document's collaborators", document.collaborators);
     })
+
+    //catch errors
     .catch( (error) => {
       console.log("error docs not found");
     })

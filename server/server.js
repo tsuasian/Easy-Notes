@@ -29,6 +29,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/*
+    SERVER SIDE LOGIC FOR COLLAB-TEXT PROJECT
+      -MONGO DB CONNECTION
+      -SOCKET IO EVENT HANDLING
+
+    - "document" is the MongoDB Schema which contains collaborating users,
+      title, and an owner.
+    - "documentContents" is the MongoDB Schema which contains a link to the
+      document it refers to, and an EditorState maintained by the npm package
+      draft.js. This is the text, and formatting of each document.
+*/
 
 
 //    **  MONGO DB CONNECTION AND SETUP   **    //
@@ -69,7 +80,9 @@ io.on('connection', function(socket)  {
 
   //  CREATE DOC -> create new document and new documentContents (text) model
   socket.on('createDoc', ({user, name}) => {
+
     //find current user on database
+    //create new document
     User.findById(user._id).then(user => {
         var newDocument = new Document({
         owner: user._id,
@@ -77,24 +90,28 @@ io.on('connection', function(socket)  {
         name
       });
 
-    //create new document contents (blank)
-    var newDocumentContents = new DocumentContent({
-      documentId: newDocument._id,
-      editorState: null
-    })
+      //create new document contents (blank)
+      var newDocumentContents = new DocumentContent({
+        documentId: newDocument._id,
+        editorState: null
+      })
 
+      //save document and document contents
+      newDocument.save();
+      newDocumentContents.save();
 
-  newDocument.save();
-  newDocumentContents.save();
-  console.log("new doc", newDocument);
-  user.documents.push (newDocument);
-  user.save();
-  console.log("new user with pushed document", user.documents);
-  socket.emit('documentCreated', newDocument, newDocumentContents);
+      //link document to user
+      //save (modified) user
+      user.documents.push (newDocument);
+      user.save();
+
+      //emit reply with newly created document and document contents
+      socket.emit('documentCreated', newDocument, newDocumentContents);
     });
   })
 
-  //LOAD DOC
+
+  //  LOAD DOC -> load all the documents a user is collaborating on
   socket.on('loadDocuments', (user) => {
     console.log("load doc user", user);
     let arr = [] //array of document objects

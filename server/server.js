@@ -171,16 +171,19 @@ io.on('connection', function(socket)  {
   })
 
 
-  //now listen for emit message event
-  //SAVE DOCUMENT CONTENTS (TO MDB)
+
+  //SAVE DOCUMENT -> save document to mongoDB for persistence
   socket.on('saveDocumentContents', ({documentId, editorState}) => {
-    console.log('document id from saveDocumentContents', documentId);
-    console.log('new editor state from saveDocumentContents', editorState);
+
+    //find documentContent given documentId
     DocumentContent.findOne({documentId:documentId})
+
     .then( (docContent) => {
+      //update editorState and save docContent
       docContent.editorState = editorState
       docContent.save()
     })
+    //handle errors
     .catch(error => {
       console.log('error from saveDocumentContents listener', error);
     })

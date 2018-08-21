@@ -260,14 +260,17 @@ io.on('connection', function(socket)  {
     })
   })
 
-  //edit title
+  //EDIT TITLE -> change a document's title
   socket.on('editTitle', ({documentId, newTitle}) => {
+
     Document.findById(documentId)
     .then( (document)  => {
+      //update and save new title
       document.name = newTitle;
       document.save()
       console.log("updated document.name to ", document.name);
     })
+    //catch errors
     .catch(error => {
       console.log("couldn't find document", error);
     })

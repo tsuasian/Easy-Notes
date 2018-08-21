@@ -113,16 +113,22 @@ io.on('connection', function(socket)  {
 
   //  LOAD DOC -> load all the documents a user is collaborating on
   socket.on('loadDocuments', (user) => {
-    console.log("load doc user", user);
-    let arr = [] //array of document objects
+    //initialize array of document objects
+    let arr = [];
+
+    //iterate over the documentIds in collaborating documents
     for (var document in user.documents){
-      // console.log("current document in for loop", document)
+
+      //search the database by the documentId to find
+      //the document object
       Document.findById(user.documents[document])
-        .then(doc => {
-          // console.log("found doc", doc)
-          arr.push(doc)
-          console.log("arr of document objects", arr);
-          socket.emit('documentsLoaded', arr)
+
+      //once a document is found, push it on to the array of
+      //document objects
+      .then(doc => {
+        arr.push(doc)
+        //emit reply with newly updated array
+        socket.emit('documentsLoaded', arr)
       })
     }
   })

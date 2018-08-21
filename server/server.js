@@ -280,51 +280,58 @@ io.on('connection', function(socket)  {
     console.log('selectionstate', selectionState);
     console.log('contentState', contentState);
   })
-
-
-
-
 });
 
 
 
-//  ***************************  //
-// ***  PASSPORT ROUTES     ***  //
-//  ***************************    //
+//    **  PASSPORT SETUP   **    //
 
+//initialize session
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }))
-
 app.use(passport.initialize());
 app.use(passport.session());
 
+//setup local strategy
 passport.use(new LocalStrategy(function(username, password, done){
-  console.log('LOCAL STRAT', username, password);
+
+  //check database for user's information
   User.findOne({ username })
+  //login logic
   .then(function(user){
+
+    //if cant find user (bad username)
     if (!user){
-      console.log('1');
       done(null, false);
-    } else if (user.password !== password){
-      console.log('2');
+    }
+
+    //if bad password
+    else if (user.password !== password){
+      // console.log('2');
       done(null, false);
-    } else {
+    }
+
+    //good login
+    else {
       done(null, user);
     }
   })
+  //catch network errors
   .catch(function(error){
     done(error);
   })
 }))
 
+//serialize user
 passport.serializeUser((user, done) => {
   done(null, user._id);
 });
 
+//deserialize user
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
     done(err, user);
@@ -333,11 +340,9 @@ passport.deserializeUser((id, done) => {
 
 app.use('/', authRouter(passport));
 
-
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
 
 // error handler
 app.use(function(err, req, res, next) {

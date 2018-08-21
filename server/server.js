@@ -226,26 +226,35 @@ io.on('connection', function(socket)  {
     })
   });
 
+
+  //REMOVE COLLABORATOR -> remove a user from a document's collaborators
   socket.on('removeUser', ({documentId, username}) => {
+
     //remove document from user's document array
     User.findOne({username})
+
     .then( (removeuser) => {
       //remove document from user's document list
       let index = removeuser.documents.indexOf(documentId);
+      //ensure valid index
       if (index > -1) {
         removeuser.documents.splice(index, 1);
         removeuser.save();
       }
     })
+
     //remove user from document's collaborators array
     Document.findById(documentId)
+
     .then( (document) => {
       let index = document.collaborators.indexOf(username);
+      //ensure valid index
       if (index > -1) {
         document.collaborators.splice(index, 1);
         document.save();
       }
     })
+    //catch errors
     .catch( (error) => {
       console.log("error");
     })

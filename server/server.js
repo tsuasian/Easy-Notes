@@ -1,10 +1,8 @@
 import http from 'http';
-
 import cookieParser from 'cookie-parser';
 import session from 'express-session'
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
-// import logger from 'morgan'
 import MongoStoreLib from 'connect-mongo';
 var MongoStore = MongoStoreLib(session);
 import User from './models/user'
@@ -16,14 +14,13 @@ const bodyParser = require('body-parser')
 const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
+import authRouter from './routes/auth.js'
 const assert = require('assert');
-
-//sockets
 const app = express();
 const server= require('http').Server(app);
 const io = require('socket.io')(server);
 
-//initialize app
+//  initialize app
 app.use('/', apiRouter);
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
@@ -32,22 +29,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
+//    **  MONGO DB CONNECTION AND SETUP   **    //
 console.log("mongo uri", process.env.MONGODB_URI);
 
-
-//  ********************* ****  //
-// ***  MONGODB CONNECTION ***  //
-//  **************************  //
+//if no env
 if (! fs.existsSync('./env.sh')) {
   throw new Error('env.sh file is missing');
 }
+
+// if env not setup/sourced
 if (! process.env.MONGODB_URI) {
   throw new Error("MONGODB_URI is not in the environmental variables. Try running 'source env.sh'");
 }
-//
-import authRouter from './routes/auth.js'
-// const dbRoutes = require('./routes/auth.js');
 
+//connect to database
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.connection.on('connected', function() {
   console.log('Success: connected to MongoDb!');
@@ -58,40 +55,42 @@ mongoose.connection.on('error', function() {
 });
 
 
-//  ***************************  //
-// ***  SOCKET IO ROUTES    ***  //
-//  ***************************  //
-
+//    ** SOCKET IO EVENTS   **    //
+//listen on port
 server.listen(1337, ()=> {
-  console.log('Server for React Todo App listening on port 1337!')
+  console.log('Server for Collab-Text listening on port 1337!')
 });
 
+//socket EVENTS
 io.on('connection', function(socket)  {
+  //log status
   console.log('connected to socket');
-  //on event create doc, create new document and documentContents model
-  //and save to mongodb
+
+
+  //  CREATE DOC -> create new document and new documentContents (text) model
   socket.on('createDoc', ({user, name}) => {
-    console.log('got to createDoc socket on server');
+    //find current user on database
     User.findById(user._id).then(user => {
-        //make new document summary
         var newDocument = new Document({
         owner: user._id,
         collaborator: [],
         name
       });
-      //make new document contents. editorState is the <Editor/> setState
-      //i.e. the actual contents
-      var newDocumentContents = new DocumentContent({
-        documentId: newDocument._id,
-        editorState: null
-      })
-      newDocument.save();
-      newDocumentContents.save();
-      console.log("new doc", newDocument);
-      user.documents.push (newDocument);
-      user.save();
-      console.log("new user with pushed document", user.documents);
-      socket.emit('documentCreated', newDocument, newDocumentContents);
+
+    //create new document contents (blank)
+    var newDocumentContents = new DocumentContent({
+      documentId: newDocument._id,
+      editorState: null
+    })
+
+
+  newDocument.save();
+  newDocumentContents.save();
+  console.log("new doc", newDocument);
+  user.documents.push (newDocument);
+  user.save();
+  console.log("new user with pushed document", user.documents);
+  socket.emit('documentCreated', newDocument, newDocumentContents);
     });
   })
 

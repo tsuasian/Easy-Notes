@@ -51,6 +51,7 @@ router.post('/login', (req, res, next) => {
       if (!err && user) {
         req.login(user, (err) => {
           if (err) {
+            res.send("error")
             res.status(500)
               .json({ success: false, err: err });
           } else {
@@ -59,6 +60,7 @@ router.post('/login', (req, res, next) => {
           }
         })
       } else {
+        res.send("error")
         res.status(500)
           .json({ success: false });
       }

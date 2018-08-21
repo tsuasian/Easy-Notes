@@ -133,21 +133,23 @@ io.on('connection', function(socket)  {
     }
   })
 
-  //LOAD DOCUMENT CONTENTS (FROM MDB)
+
+  //LOAD DOCUMENT CONTENTS -> load a specific document's contents
+  //create socket io room for document
   socket.on('loadDocumentContents', ({documentId}) => {
-    console.log("document id from loadDocumentContents", documentId);
-    //grab documentcontents from documentcontent
+
+    //grab documentContent object from mongoDB
     DocumentContent.findOne({documentId:documentId})
-    .then( (docContent) => {
-      console.log('FOUND document contents', docContent);
-      socket.emit('documentContentsLoaded', docContent);
+      //once found
+      .then( (docContent) => {
+        //emit reply with found documentContent
+        socket.emit('documentContentsLoaded', docContent);
     })
 
-    //now, lets create a socket room
+    // create socketRoom based on documentId
     // convert mongoSchema_id object to a string
     let roomName = String(documentId);
     socket.join(roomName);
-    console.log('user joined room ', roomName);
   })
 
   //listen for a change in editor state

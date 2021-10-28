@@ -1,4 +1,4 @@
-# collab-text
+# Easy-Notes
 A live, collaborative text editor packaged as a desktop App.
 Technologies used:
 -React
